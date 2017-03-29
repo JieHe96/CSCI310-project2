@@ -5,6 +5,14 @@ use PHPUnit\Framework\TestCase;
 
 class Alltest extends TestCase
 {
+	/**
+     * @covers Paper::__construct
+     */	
+	public function testPaperConstructor() {
+		include_once(dirname(__File__).'/../php/paper.php');
+		$paper = new Paper();
+		$this->assertInstanceOf(Paper::class,$paper);
+	}
 
 	/**
      * @covers Paper::__construct
@@ -12,8 +20,7 @@ class Alltest extends TestCase
      * @covers Paper::getAuthors
      * @covers Paper::getDownloadLink
      */
-	public function testPaperConstructor() {
-		include_once(dirname(__File__).'/../php/paper.php');
+	public function testPaperSet() {
 
 		$title = "The Adventures of Tom Sawyer";
 		$authors = "Mark Twain";
@@ -28,8 +35,14 @@ class Alltest extends TestCase
 		$this->assertEquals($authors, $paper->getAuthors());
 		$this->assertEquals($downloadlink, $paper->getDownloadLink());
 	}
-
-
+	/**
+     * @covers APIcommunicator::__construct
+     */	
+	public function testAPIcommunicatorConstructor() {
+		include_once(dirname(__File__).'/../php/APIcommunicator.php');
+		$com = new APIcommunicator();
+		$this->assertInstanceOf(APIcommunicator::class,$com);
+	}
 
 }
 

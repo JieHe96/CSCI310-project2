@@ -17,7 +17,7 @@ class Paper{
 	function setAuthors($authors){
 		return $this->authors = $authors;
 	}
-	function getAuthors($authors){
+	function getAuthors(){
 		return $this->authors;
 	}
 	function setDownloadLink($link){

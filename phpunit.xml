@@ -10,6 +10,9 @@
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true"
             addUncoveredFilesFromWhitelist="true">
+            <file> /home/student/Desktop/CSCI310-project2/php/paper.php</file>
+            <file> /home/student/Desktop/CSCI310-project2/php/APIcommunicator.php</file>
+
         </whitelist>
     </filter>
 
