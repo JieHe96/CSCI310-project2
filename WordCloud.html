@@ -3,11 +3,13 @@
 <head>
   <title>Word Cloud</title>
   <link href="stylesheet/style.css" rel="stylesheet">
+	<script type="text/javascript" src="jquery/jquery-3.1.1.min.js"></script>
+	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
 </head>
 <body>
 <div id = "outercontainer">
-
 <div id = "titleDiv">Word Cloud</div>
 
 <div id = "wordcloudDiv">
@@ -15,11 +17,65 @@
 
 <div id = "searchDiv">
 <input id = "search_input" style="width: 200px;" placeholder="Author Name">
+<input id = "x_input" placeholder="# of Papers">
+
 <br>
-<button id = "searchbutton" >Search</button>
+<button id = "searchbutton" onclick="searchArticle();">Search</button>
+</div>
+<div id= "displayDiv">
 </div>
 
 
+<script>
+	var papers = [];
+	init();
+	function init(){
+		document.querySelector("#displayDiv").style.visibility = "hidden";
+		document.querySelector("#x_input").value = 10;
+	}
+	function searchArticle(){
+
+		var searchinput = document.querySelector("#search_input").value;
+		var xinput = document.querySelector("#x_input").value;
+
+		$.ajax({
+      url: 'php/articlesearch.php',
+    	type: 'POST',
+      data: {searchinput:searchinput, xinput:xinput},
+      success : function(data) {
+        if(data=="error"){alert("Erro occurred");}
+        else{
+         	papers = eval(data);
+         	displayWordCloud(papers);
+        } 
+      },
+      error : function() {
+        alert('Please type in valid artist name.');
+      }
+    });
+	}
+	function displayWordCloud(paperarray){
+		var table = "<table id = 'papertable'>";
+		var row = "<tr bgcolor='lightblue'><th style='width:100px;'>Title</th>";
+		row += "<th>Authors</th><th>Download</th><th>Abstract</th></tr>";
+		table += row;
+
+		for(var i=0; i<paperarray.length; i++){
+			row = "<tr bgcolor='lightyellow'>"
+			row += "<td><div style='width: 200px;'>" + paperarray[i].title + "</div></td>";
+			row += "<td>" + paperarray[i].authors + "</td>";
+			row += "<td><a href=" + paperarray[i].downloadlink + ">" + paperarray[i].downloadlink + "</td>";
+			row += "<td><div style='width: 70px;'>" + "abstract" + "</div></td>";
+			row += "<tr>";
+			table += row;
+
+		}
+		table += "</table>";
+		document.querySelector("#displayDiv").innerHTML = table;
+		document.querySelector("#displayDiv").style.visibility = "visible";
+
+	}
+</script>
 </div>
 </body>
 </html>

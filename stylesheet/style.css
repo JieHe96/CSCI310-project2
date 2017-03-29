@@ -31,6 +31,13 @@ article {
   text-align: center;
 }
 
+table{
+  width: 200px;
+}
+
+td{
+  padding: 5px;
+}
 #outercontainer{
   width: 1000px;
   text-align: center;
@@ -74,8 +81,21 @@ article {
   background-color: lightyellow;
   font-size: 30px;
 }
+#x_input{
+  width: 80px;
+}
 
-
+#displayDiv{
+  width: 600px;
+  text-align: center;
+  margin-top: 20px;
+  margin-left: 200px;
+  background-color: lightpink;
+  font-size: 10px;
+  min-height: 40px;
+}
+#searchhistory{
+}
 span {
   color: Yellow;
 }
