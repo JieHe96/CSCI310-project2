@@ -1,0 +1,14 @@
+default:
+  extensions:
+    Behat\MinkExtension\Extension:
+      base_url:  'http://localhost/project2/WordCloud.html'
+      default_session: selenium2
+      browser_name: 'firefox'
+      selenium2:                    
+        capabilities: { "browser": "firefox", "version": "45"}
+
+
+# java -jar -Dwebdriver.river=”/Downloads/chromedriver” selenium-server-standalone-3.2.0.jar 
+#java -jar selenium-server-andalone-3.2.0.jar 
+
+#php bin/behat 
