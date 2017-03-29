@@ -73,6 +73,9 @@ td{
   text-align: center;
   background-color: lightblue;
 }
+#papertable{
+  margin: auto;
+}
 #titleDiv{
   margin-top: 20px;
   width: 400px;
@@ -85,7 +88,7 @@ td{
   width: 80px;
 }
 
-#displayDiv{
+#papersDiv{
   width: 600px;
   text-align: center;
   margin-top: 20px;
@@ -95,6 +98,28 @@ td{
   min-height: 40px;
 }
 #searchhistory{
+}
+#abstractDiv{
+  width: 600px;
+  text-align: center;
+  margin-top: 20px;
+  margin-left: 200px;
+  background-color: yellow;
+  font-size: 10px;
+  min-height: 40px;
+  text-align: center;
+  padding: 10px;
+
+}
+#abstractContent{
+  width: 400px;
+  margin: auto;
+  background-color: white;
+  font-size: 10px;
+  min-height: 60px;
+  text-align: center;
+  padding: 10px;
+
 }
 span {
   color: Yellow;

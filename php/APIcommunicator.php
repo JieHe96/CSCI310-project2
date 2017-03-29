@@ -10,17 +10,20 @@ class APIcommunicator{
 
 	function searchArticle($searchinput,$xinput,$isTest){
 		/* arxiv API */
+		
 		$searchURL = "http://export.arxiv.org/api/query?search_query=all:".$searchinput."&start=0&max_results=".$xinput;
 		$result = $this->execSearchTerm($searchURL);
 		$result = simplexml_load_string($result)->entry;
 		$this->generatePapers($result);
-
+		
 		echo json_encode($this->papers);
-		/*IEEE API
+		/*IEEE API*/
+		/*
 		$searchURL = "http://ieeexplore.ieee.org/gateway/ipsSearch.jsp?querytext=java&au=".$searchinput;
 		$result = $this->execSearchTerm($searchURL);
 		$result = simplexml_load_string($result)->document;
 		$this->generatePapers($result);
+		//echo var_dump($result);
 		echo json_encode($this->papers);
 		*/
 	}
@@ -37,11 +40,11 @@ class APIcommunicator{
 		for($i=0; $i<sizeof($xmlobject); $i++){
 			$paper = new Paper();
 			$paper->setTitle((string)$xmlobject[$i]->title);
-			$paper->setAuthors((string)$xmlobject[$i]->author->name);
 			/* arxiv API */
+			$paper->setAuthors((string)$xmlobject[$i]->author->name);
+			$paper->setAbstract((string)$xmlobject[$i]->summary);
 			$link = (string)$xmlobject[$i]->link[1]->attributes()->href;
 			$paper->setDownloadLink($link);
-
 			array_push($this->papers,$paper);
 		}
 	}

@@ -18,11 +18,14 @@
 <div id = "searchDiv">
 <input id = "search_input" style="width: 200px;" placeholder="Author Name">
 <input id = "x_input" placeholder="# of Papers">
-
 <br>
 <button id = "searchbutton" onclick="searchArticle();">Search</button>
 </div>
-<div id= "displayDiv">
+<div id= "papersDiv"></div>
+<div id= "abstractDiv">
+<div style="font-size: 20px;">Abstract</div>
+<div id= "abstractContent"></div>
+<button id = "backbutton" onclick="backToPapers();">Back</button>
 </div>
 
 
@@ -30,8 +33,10 @@
 	var papers = [];
 	init();
 	function init(){
-		document.querySelector("#displayDiv").style.visibility = "hidden";
+		document.querySelector("#papersDiv").style.visibility = "hidden";
 		document.querySelector("#x_input").value = 10;
+		document.querySelector("#abstractDiv").style.display = "none";
+
 	}
 	function searchArticle(){
 
@@ -46,7 +51,8 @@
         if(data=="error"){alert("Erro occurred");}
         else{
          	papers = eval(data);
-         	displayWordCloud(papers);
+         	displayWordCloud();
+         	console.log(data);
         } 
       },
       error : function() {
@@ -54,26 +60,41 @@
       }
     });
 	}
-	function displayWordCloud(paperarray){
+	function displayWordCloud(){
 		var table = "<table id = 'papertable'>";
-		var row = "<tr bgcolor='lightblue'><th style='width:100px;'>Title</th>";
-		row += "<th>Authors</th><th>Download</th><th>Abstract</th></tr>";
+		var row = "<tr bgcolor='lightblue'><th style='width:100px;'>Title (click to see Abstract)</th>";
+		row += "<th>Authors</th><th>Download</th></tr>";
 		table += row;
-
-		for(var i=0; i<paperarray.length; i++){
+		for(var i=0; i<papers.length; i++){
 			row = "<tr bgcolor='lightyellow'>"
-			row += "<td><div style='width: 200px;'>" + paperarray[i].title + "</div></td>";
-			row += "<td>" + paperarray[i].authors + "</td>";
-			row += "<td><a href=" + paperarray[i].downloadlink + ">" + paperarray[i].downloadlink + "</td>";
-			row += "<td><div style='width: 70px;'>" + "abstract" + "</div></td>";
+			row += "<td><div style='width: 200px; color:grey;' onclick='displayAbstract(this)'>";
+			row += papers[i].title + "</div></td>";
+			row += "<td>" + papers[i].authors + "</td>";
+			row += "<td><a href=" + papers[i].downloadlink + ">" + papers[i].downloadlink + "</td>";
 			row += "<tr>";
 			table += row;
 
 		}
 		table += "</table>";
-		document.querySelector("#displayDiv").innerHTML = table;
-		document.querySelector("#displayDiv").style.visibility = "visible";
+		document.querySelector("#papersDiv").innerHTML = table;
+		document.querySelector("#papersDiv").style.visibility = "visible";
+	}
 
+	function displayAbstract(tablecell){
+		var clicktitle = tablecell.innerHTML;
+		for(var i=0; i<papers.length; i++){
+			if(papers[i].title == clicktitle){
+				document.querySelector("#papersDiv").style.display = "none";
+				document.querySelector("#abstractContent").innerHTML = papers[i].abstract;
+				document.querySelector("#abstractDiv").style.display = "block";
+				return;
+			}
+		}
+	}
+
+	function backToPapers(){
+		document.querySelector("#abstractDiv").style.display = "none";
+		document.querySelector("#papersDiv").style.display = "block";
 	}
 </script>
 </div>

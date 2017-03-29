@@ -3,6 +3,7 @@ class Paper{
 	public $title;
 	public $downloadlink;
 	public $authors;
+	public $abstract;
 	function __construct(){
 
 	}
@@ -26,6 +27,13 @@ class Paper{
 	}
 	function getDownloadLink(){
 		return $this->downloadlink;
+	}
+	function setAbstract($abstract){
+		$this->abstract = $abstract;
+	}
+	function getAbstract(){
+		return $this->abstract;
+		
 	}
 }
 ?>
