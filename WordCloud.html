@@ -28,7 +28,6 @@
 <button id = "backbutton" onclick="backToPapers();">Back</button>
 </div>
 
-
 <script>
 	var papers = [];
 	init();
@@ -60,6 +59,17 @@
       }
     });
 	}
+
+	function downloadURI(uri) {
+  		var link = document.createElement("a");
+  		link.download = "download";
+  		link.href = uri.innerHTML;
+  		document.body.appendChild(link);
+  		link.click();
+  		document.body.removeChild(link);
+  		delete link;
+	}
+
 	function displayWordCloud(){
 		var table = "<table id = 'papertable'>";
 		var row = "<tr bgcolor='lightblue'><th style='width:100px;'>Title (click to see Abstract)</th>";
@@ -70,7 +80,7 @@
 			row += "<td><div style='width: 200px; color:grey;' onclick='displayAbstract(this)'>";
 			row += papers[i].title + "</div></td>";
 			row += "<td>" + papers[i].authors + "</td>";
-			row += "<td><a href=" + papers[i].downloadlink + ">" + papers[i].downloadlink + "</td>";
+			row += "<td><a href='#' onclick='downloadURI(this)'>" + papers[i].downloadlink + "</td>";
 			row += "<tr>";
 			table += row;
 
