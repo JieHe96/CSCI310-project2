@@ -92,7 +92,8 @@
 		table += "</table>";
 		document.querySelector("#papersDiv").innerHTML = table;
 		document.querySelector("#papersDiv").style.visibility = "visible";
-		convertToText("http://localhost/CSCI310-project2/0304079v1.pdf");
+		convertToText("https://cors-anywhere.herokuapp.com/"+papers[0].downloadlink);
+		//getBinaryData(papers[0].downloadlink);
 	}
 
 	function displayAbstract(tablecell){
@@ -145,7 +146,7 @@
 	    xhr.responseType = 'arraybuffer';
 	    xhr.onload = function(e) {
 	        //binary form of ajax response,
-	        // convertToText(e.currentTarget.response);
+	        convertToText(e.currentTarget.response);
 	    };
 
 	    xhr.onerror = function  () {
