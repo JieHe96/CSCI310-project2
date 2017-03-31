@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Word Cloud</title>
-  <link href="stylesheet/style.css" rel="stylesheet">
+  	<title>Word Cloud</title>
+  	<link href="stylesheet/style.css" rel="stylesheet">
 	<script type="text/javascript" src="jquery/jquery-3.1.1.min.js"></script>
 	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -13,6 +13,7 @@
 <div id = "titleDiv">Word Cloud</div>
 
 <div id = "wordcloudDiv">
+<svg></svg>
 </div>
 
 <div id = "searchDiv">
@@ -29,39 +30,87 @@
 </div>
 
 <script src="pdf.js"></script>
+<script src="https://www.jasondavies.com/d3.min.js"></script>
+<script src="https://www.jasondavies.com/wordcloud/cloud.min.js"></script>
+<script src="d3.layout.cloud.js"></script>
 
 <script>
 	var papers = [];
 	var PDF_URL = '';
+	var plainText_list;
+	var frequency_list = [];
     PDFJS.workerSrc = 'pdf.worker.js';
 	init();
+
+	var fill = d3.scale.category20();
+  	//generate the cloud to the website
+  	function showCloud() {
+	    // frequency_list = [];
+	    d3.layout.cloud().size([800, 500])
+	      .words(frequency_list)
+	      .padding(1)
+	      .rotate(0)
+	      .font("Impact")
+	      .text(function(d) { return d.text; })
+	      .fontSize(function(d) { return d.size; })
+	      .on("end", draw)
+	      .start();
+  	}
+
+	//draw the word cloud using jasondavies reference
+  	function draw(words) {
+    	d3.select(document.getElementById('wordcloudDiv')).append("svg") 
+	        .attr("width", 800)
+	        .attr("height", 500)
+	      .append("g")
+	        .attr("transform", "translate(400,250)")
+	        .selectAll("text")
+	        .data(words)
+	        .enter()
+	      .append("text")
+	        .style("font-size", function(d) { return d.size + "px"; })
+	        .style("font-family", "Impact")
+	        .style("fill", function(d, i) { return fill(i); })
+	        .attr("text-anchor", "middle")
+	        .attr("transform", function(d) {
+	          return "translate(" + [d.x, d.y] + ")rotate(" + 0 + ")";
+	        })
+	        .text(function(d) { return d.text; })
+	        .transition()
+	        .each(function () {
+	          d3.select(this).on("click", function (d,i) {
+	            display_SongList(d.text);
+	          });
+	        });
+	    d3.select("svg").remove();
+  	}
+
 	function init(){
 		document.querySelector("#papersDiv").style.visibility = "hidden";
 		document.querySelector("#x_input").value = 10;
 		document.querySelector("#abstractDiv").style.display = "none";
-
 	}
-	function searchArticle(){
 
+	function searchArticle(){
 		var searchinput = document.querySelector("#search_input").value;
 		var xinput = document.querySelector("#x_input").value;
 
 		$.ajax({
-      url: 'php/articlesearch.php',
-    	type: 'POST',
-      data: {searchinput:searchinput, xinput:xinput},
-      success : function(data) {
-        if(data=="error"){alert("Erro occurred");}
-        else{
-         	papers = eval(data);
-         	displayWordCloud();
-         	console.log(data);
-        } 
-      },
-      error : function() {
-        alert('Please type in valid artist name.');
-      }
-    });
+      		url: 'php/articlesearch.php',
+    		type: 'POST',
+      		data: {searchinput:searchinput, xinput:xinput},
+      		success : function(data) {
+        		if(data=="error"){alert("Erro occurred");}
+        		else{
+         			papers = eval(data);
+         			displayWordCloud();
+         			console.log(data);
+        		} 
+      		},
+      		error : function() {
+        		alert('Please type in valid artist name.');
+      		}
+    	});
 	}
 
 	function downloadURI(uri) {
@@ -93,7 +142,6 @@
 		document.querySelector("#papersDiv").innerHTML = table;
 		document.querySelector("#papersDiv").style.visibility = "visible";
 		convertToText("https://cors-anywhere.herokuapp.com/"+papers[0].downloadlink);
-		//getBinaryData(papers[0].downloadlink);
 	}
 
 	function displayAbstract(tablecell){
@@ -113,6 +161,61 @@
 		document.querySelector("#papersDiv").style.display = "block";
 	}
 
+	function parseText(text_list) {
+		var text_str = '';
+		for(var i = 0; i < text_list.length; i++) {
+			text_str = text_str.concat(text_list[i]);
+		}
+		var text_arr = text_str.split(" ");
+		var parsed_arr = [];
+		for(var i = 0; i < text_arr.length; i++) {
+			var ele = text_arr[i];
+			if(ele.slice(-1) == "." || ele.slice(-1) == "," || ele.slice(-1) == "?" || ele.slice(-1) == ")") {
+				ele = ele.substring(0, ele.length - 1);
+			}
+			ele = ele.toLowerCase();
+			if(ele != "" && ele != " " && ele != "a" && ele != "b" && ele != "c" && ele != "d" && ele != "e" &&
+				ele != "f" && ele != "g" && ele != "h" && ele != "i" && ele != "j" && ele != "k" && ele != "l" &&
+				ele != "m" && ele != "n" && ele != "o" && ele != "p" && ele != "q" && ele != "r" && ele != "s" &&
+				ele != "t" && ele != "u" && ele != "v" && ele != "w" && ele != "x" && ele != "y" && ele != "z" &&
+				ele != "is" && ele != "the" && ele != "of" && ele != "that" && ele != "are" && ele != "be" && ele != "was" &&
+				ele != "and" && ele != "in" && ele != "it" && ele != "on" && ele != "to" && ele != "not" && ele != "for" &&
+				ele != "that" && ele != "+" && ele != "-" && ele != "*" && ele != "/" && ele != "&" && ele != "$" &&
+				ele != "^" && ele != "%" && ele != "#" && ele != ")" && ele != "(" && ele != "}" && ele != "{" 
+				&& ele != "from" && ele != "by" && ele != "as" && ele != "1" && ele != "2" && ele != "3" && ele != "4"
+				&& ele != "5" && ele != "6" && ele != "7" && ele != "8" && ele != "9" && ele != "0") {
+				parsed_arr.push(ele);
+			}
+		}
+
+		var freq_list = {};
+		for(var i = 0; i < parsed_arr.length; i++) {
+		    var num = parsed_arr[i];
+		    freq_list[num] = freq_list[num] ? freq_list[num]+1 : 1;
+		}
+
+		var sorted_list = [];
+		for (var word in freq_list) {
+		    sorted_list.push([word, freq_list[word]]);
+		}
+
+		sorted_list.sort(function(a, b) {
+		    return a[1] - b[1];
+		});
+
+		var top_freq = sorted_list[0][1];
+		for(var i = 0; i < 250; i++) {
+			var ratio = sorted_list[i][1] / top_freq;
+			var elem_size = ratio * 150;
+			var obj = {text : sorted_list[i][0], size : elem_size};
+			console.log(obj);
+			frequency_list.push(obj);
+		}
+		showCloud();
+
+		// console.log(sorted_list);
+	}
+
 	function convertToText(response){
 		PDFJS.getDocument(response).then(function (pdf) {
     		var pdfDocument = pdf;
@@ -130,7 +233,7 @@
     		Promise.all(pagesPromises).then(function (pagesText) {
         		// Display text of all the pages in the console
         		// e.g ["Text content page 1", "Text content page 2", "Text content page 3" ... ]
-        		console.log(pagesText);
+        		parseText(pagesText);
     		});
 		}, function (reason) {
     	// PDF loading error
@@ -138,24 +241,24 @@
 		});
 	}
 
-	function getBinaryData (url) {
-	    // body...
-	    var xhr = new XMLHttpRequest();
+	// function getBinaryData (url) {
+	//     // body...
+	//     var xhr = new XMLHttpRequest();
 
-	    xhr.open('GET', url, true);
-	    xhr.responseType = 'arraybuffer';
-	    xhr.onload = function(e) {
-	        //binary form of ajax response,
-	        convertToText(e.currentTarget.response);
-	    };
+	//     xhr.open('GET', url, true);
+	//     xhr.responseType = 'arraybuffer';
+	//     xhr.onload = function(e) {
+	//         //binary form of ajax response,
+	//         convertToText(e.currentTarget.response);
+	//     };
 
-	    xhr.onerror = function  () {
-	        // body...
-	        alert("xhr error");
-	    }
+	//     xhr.onerror = function  () {
+	//         // body...
+	//         alert("xhr error");
+	//     }
 
-	    xhr.send();
-	}
+	//     xhr.send();
+	// }
 
 	function getPageText(pageNum, PDFDocumentInstance) {
     // Return a Promise that is solved once the text of the page is retrieven
@@ -176,7 +279,6 @@
         	});
     	});
 	}
-
 
 </script>
 </div>
