@@ -49,7 +49,7 @@ class FeatureContext extends MinkContext
      */
     public function iWaitForSeconds($arg1)
     {
-        sleep($arg1);
+        sleep($arg1); 
     }
 
     /**
