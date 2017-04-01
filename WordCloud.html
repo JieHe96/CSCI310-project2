@@ -209,7 +209,7 @@
 		if(size > 250) {size = 250;}
 		for(var i = 0; i < size; i++) {
 			var ratio = sorted_list[i][1] / top_freq;
-			var elem_size = ratio * 150;
+			var elem_size = ratio * 120 + 30;
 			var obj = {text : sorted_list[i][0], size : elem_size};
 			console.log(obj);
 			frequency_list.push(obj);
