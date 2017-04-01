@@ -6,7 +6,6 @@
 	<script type="text/javascript" src="jquery/jquery-3.1.1.min.js"></script>
 	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-
 </head>
 <body>
 <div id = "outercontainer">
@@ -39,6 +38,8 @@
 	var PDF_URL = '';
 	var plainText_list;
 	var frequency_list = [];
+	var textnum = 0;
+	var processednum = 0;
     PDFJS.workerSrc = 'pdf.worker.js';
 	init();
 
@@ -104,7 +105,7 @@
         		else{
          			papers = eval(data);
          			displayWordCloud();
-         			console.log(data);
+         		//	console.log(data);
         		} 
       		},
       		error : function() {
@@ -124,7 +125,9 @@
 	}
 
 	function displayWordCloud(){
-		var table = "<table id = 'papertable'>";
+		document.querySelector("#wordcloudDiv").style.display = "none";
+		alltext = ' ';
+ 		var table = "<table id = 'papertable'>";
 		var row = "<tr bgcolor='lightblue'><th style='width:100px;'>Title (click to see Abstract)</th>";
 		row += "<th>Authors</th><th>Download</th></tr>";
 		table += row;
@@ -141,7 +144,16 @@
 		table += "</table>";
 		document.querySelector("#papersDiv").innerHTML = table;
 		document.querySelector("#papersDiv").style.visibility = "visible";
-		convertToText("https://cors-anywhere.herokuapp.com/"+papers[0].downloadlink);
+		frequency_list = [];
+		textnum = 0;
+		processednum = 0;
+		for(var i=0; i<papers.length; i++){
+			if(papers[i].downloadlink.includes("pdf")){
+				convertToText("https://cors-anywhere.herokuapp.com/"+papers[i].downloadlink);
+				textnum++;
+			}
+		}
+		document.querySelector("#wordcloudDiv").style.display = "block";
 	}
 
 	function displayAbstract(tablecell){
@@ -204,18 +216,20 @@
 		});
 
 		var top_freq = sorted_list[sorted_list.length - 1][1];
-		console.log(sorted_list);
+		//console.log(sorted_list);
 		var size = sorted_list.length;
 		if(size > 250) {size = 250;}
 		for(var i = 0; i < size; i++) {
 			var ratio = sorted_list[i][1] / top_freq;
 			var elem_size = ratio * 120 + 30;
 			var obj = {text : sorted_list[i][0], size : elem_size};
-			console.log(obj);
+			//console.log(obj);
 			frequency_list.push(obj);
 		}
-		showCloud();
-
+		processednum++;
+		if(textnum==processednum){
+			showCloud();
+		}
 		// console.log(sorted_list);
 	}
 
