@@ -13,6 +13,7 @@
 
 <div id = "wordcloudDiv">
 <svg></svg>
+<div id = "progressContainer"><div id = "progressBar"></div></div>
 </div>
 
 <div id = "searchDiv">
@@ -126,6 +127,8 @@
 
 	function displayWordCloud(){
 		document.querySelector("#wordcloudDiv").style.display = "none";
+		document.querySelector("#progressContainer").style.display = "block";
+
 		alltext = ' ';
  		var table = "<table id = 'papertable'>";
 		var row = "<tr bgcolor='lightblue'><th style='width:100px;'>Title (click to see Abstract)</th>";
@@ -227,9 +230,13 @@
 			frequency_list.push(obj);
 		}
 		processednum++;
+		moveprogress();
 		if(textnum==processednum){
 			showCloud();
+			document.querySelector("#progressContainer").style.display = "none";
+
 		}
+
 		// console.log(sorted_list);
 	}
 
@@ -295,6 +302,12 @@
             	});
         	});
     	});
+	}
+	function moveprogress(){
+
+		var bar = document.querySelector("#progressBar");
+		bar.style.width = processednum/textnum*200 +"px";
+
 	}
 
 </script>

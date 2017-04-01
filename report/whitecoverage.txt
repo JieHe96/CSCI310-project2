@@ -1,14 +1,14 @@
 
 
 Code Coverage Report:   
-  2017-03-29 12:04:34   
+  2017-04-01 14:32:37   
                         
  Summary:               
   Classes:  0.00% (0/2) 
-  Methods: 45.45% (5/11)
-  Lines:   18.75% (6/32)
+  Methods: 38.46% (5/13)
+  Lines:   16.67% (6/36)
 
 APIcommunicator
-  Methods:  25.00% ( 1/ 4)   Lines:   9.09% (  2/ 22)
+  Methods:  25.00% ( 1/ 4)   Lines:   8.70% (  2/ 23)
 Paper
-  Methods:  57.14% ( 4/ 7)   Lines:  44.44% (  4/  9)
+  Methods:  44.44% ( 4/ 9)   Lines:  33.33% (  4/ 12)
