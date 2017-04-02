@@ -39,6 +39,8 @@
 	var PDF_URL = '';
 	var plainText_list;
 	var frequency_list = [];
+	var word_title_list = [];
+	var title_freq_list = [];
 	var textnum = 0;
 	var processednum = 0;
     PDFJS.workerSrc = 'pdf.worker.js';
@@ -81,7 +83,7 @@
 	        .transition()
 	        .each(function () {
 	          d3.select(this).on("click", function (d,i) {
-	            display_SongList(d.text);
+	            displayPapers(d.text);
 	          });
 	        });
 	    d3.select("svg").remove();
@@ -152,7 +154,7 @@
 		processednum = 0;
 		for(var i=0; i<papers.length; i++){
 			if(papers[i].downloadlink.includes("pdf")){
-				convertToText("https://cors-anywhere.herokuapp.com/"+papers[i].downloadlink);
+				convertToText("https://cors-anywhere.herokuapp.com/"+papers[i].downloadlink, papers[i].title);
 				textnum++;
 			}
 		}
@@ -176,7 +178,7 @@
 		document.querySelector("#papersDiv").style.display = "block";
 	}
 
-	function parseText(text_list) {
+	function parseText(text_list, title) {
 		var text_str = '';
 		for(var i = 0; i < text_list.length; i++) {
 			text_str = text_str.concat(text_list[i]);
@@ -215,13 +217,22 @@
 		}
 
 		sorted_list.sort(function(a, b) {
-		    return a[1] - b[1];
+		    return b[1] - a[1];
 		});
 
-		var top_freq = sorted_list[sorted_list.length - 1][1];
+		var word_title = [];
+
+		var top_freq = sorted_list[0][1];
 		//console.log(sorted_list);
 		var size = sorted_list.length;
 		if(size > 250) {size = 250;}
+
+		for(var i = 0; i < size; i++) {
+			var obj = {text: sorted_list[i][0], freq: sorted_list[i][1], title: title};
+			word_title.push(obj);
+		}
+		word_title_list.push(word_title);
+
 		for(var i = 0; i < size; i++) {
 			var ratio = sorted_list[i][1] / top_freq;
 			var elem_size = ratio * 120 + 30;
@@ -236,11 +247,48 @@
 			document.querySelector("#progressContainer").style.display = "none";
 
 		}
-
-		// console.log(sorted_list);
 	}
 
-	function convertToText(response){
+	function displayPapers(word) {
+		for(var i = 0; i < word_title_list.length; i++) {
+			for(var j = 0; j < word_title_list[i].length; j++) {
+				if(word_title_list[i][j].text == word) {
+					// console.log(word_title_list[i][j].title);
+					title_freq_list.push({title: word_title_list[i][j].title, freq: word_title_list[i][j].freq});
+				}
+			}
+		}
+
+		// console.log(title_freq_list);
+
+		alltext = ' ';
+ 		var table = "<table id = 'papertable'>";
+		var row = "<tr bgcolor='lightblue'><th style='width:100px;'>Title (click to see Abstract)</th>";
+		row += "<th>Authors</th><th>Download</th><th>Frequency</th></tr>";
+		table += row;
+		for(var i=0; i<papers.length; i++){
+			for(var j = 0; j < title_freq_list.length; j++) {
+				console.log(title_freq_list[j].title);
+				if(papers[i].title == title_freq_list[j].title) {
+					row = "<tr bgcolor='lightyellow'>"
+					row += "<td><div style='width: 200px; color:grey;' onclick='displayAbstract(this)'>";
+					row += papers[i].title + "</div></td>";
+					row += "<td>" + papers[i].authors + "</td>";
+					row += "<td><a href='#' onclick='downloadURI(this)'>" + papers[i].downloadlink + "</td>";
+					row += "<td>" + title_freq_list[j].freq + "</td>"
+					row += "<tr>";
+					table += row;
+					break;
+				}
+			}
+		}
+		table += "</table>";
+		document.querySelector("#papersDiv").innerHTML = table;
+		document.querySelector("#papersDiv").style.visibility = "visible";
+
+	}
+
+	function convertToText(response, paperTitle){
 		PDFJS.getDocument(response).then(function (pdf) {
     		var pdfDocument = pdf;
     		// Create an array that will contain our promises 
@@ -257,7 +305,7 @@
     		Promise.all(pagesPromises).then(function (pagesText) {
         		// Display text of all the pages in the console
         		// e.g ["Text content page 1", "Text content page 2", "Text content page 3" ... ]
-        		parseText(pagesText);
+        		parseText(pagesText, paperTitle);
     		});
 		}, function (reason) {
     	// PDF loading error
