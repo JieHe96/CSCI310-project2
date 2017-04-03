@@ -1,7 +1,7 @@
 Feature: (Req ID: 6a) For each paper, provide links to download it from the digital library
 Scenario: User can click on the link to download the paper
 
-Given I am on "http://localhost/project2/WordCloud.html"
+Given I am on "/WordCloud.html"
 	And I fill in "search_input" with "wang"
 	And I press "searchbutton"
 	And I wait for 30 seconds
