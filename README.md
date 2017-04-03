@@ -10,3 +10,10 @@ phpunit --coverage-text=./report/whitecoverage.txt --log-junit report/whiteresul
 	The pass&fail status report is generated as ./report/whitestatus.txt
 	The other test output is generated as  ./report/whiteresult.txt
 ----------------------------------------------------------------------
+----------------------------------------------------------------------
+Black-box Testing  
+1.	Open terminal, change directory to: Desktop/project2  
+2.	Run command line  
+php bin/behat  
+3.	The output is generated as  
+  
