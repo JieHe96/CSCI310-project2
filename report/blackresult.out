@@ -1,0 +1,71 @@
+@sprint1
+Feature: (Req ID: 2) User can input the desired number of papers
+    that is going to be returned
+
+  Scenario: User can input X in a textbox on initial page # features/sprint1/InputNumber.feature:4
+    Given I am on "/WordCloud.html"                       # FeatureContext::visit()
+    And I fill in "search_input" with "wang"              # FeatureContext::fillField()
+    When I fill in "x_input" with "5"                     # FeatureContext::fillField()
+    And I press "searchbutton"                            # FeatureContext::pressButton()
+    And I wait for 15 seconds                             # FeatureContext::iWaitForSeconds()
+    Then I should see "beam"                              # FeatureContext::assertPageContainsText()
+    And I should see "factor"                             # FeatureContext::assertPageContainsText()
+      The text "factor" was not found anywhere in the text of the current page.
+    And I should not see "attack"                         # FeatureContext::assertPageNotContainsText()
+
+@sprint1
+Feature: (Req ID: 6a) For each paper, provide links to download it from the digital library
+
+  Scenario: User can click on the link to download the paper          # features/sprint1/LinksDownload.feature:3
+    Given I am on "/WordCloud.html"                                   # FeatureContext::visit()
+    And I fill in "search_input" with "wang"                          # FeatureContext::fillField()
+    And I press "searchbutton"                                        # FeatureContext::pressButton()
+    And I wait for 30 seconds                                         # FeatureContext::iWaitForSeconds()
+    Then I should see "we"                                            # FeatureContext::assertPageContainsText()
+    And I click on "we" in the "div#wordcloudDiv" element             # FeatureContext::iClickOnInTheElement()
+    Then I should see "http://arxiv.org/pdf/1304.2822v1" in the table # FeatureContext::iShouldSeeInTheTable()
+
+@sprint1
+Feature: (Req ID: 1a) Initial page that allows one to input
+    search criteria comprised of a researcher’s last name
+
+  Scenario: User can search by researchers’ last name                 # features/sprint1/SearchByLastName.feature:4
+    Given I am on "/WordCloud.html"                                   # FeatureContext::visit()
+    When I fill in "search_input" with "wang"                         # FeatureContext::fillField()
+    And I press "searchbutton"                                        # FeatureContext::pressButton()
+    And I wait for 15 seconds                                         # FeatureContext::iWaitForSeconds()
+    Then I should see "bunch"                                         # FeatureContext::assertPageContainsText()
+      The text "bunch" was not found anywhere in the text of the current page.
+
+@sprint1
+Feature: (Req ID: 4) View list of papers that mention that word by clicking on
+  the word in word cloud
+
+  Scenario: User can click the word and view the list of papers               # features/sprint1/WordCloudClickedAndView.feature:4
+    Given I am on "/WordCloud.html"                                           # FeatureContext::visit()
+    And I fill in "search_input" with "wang"                                  # FeatureContext::fillField()
+    And I fill in "x_input" with "5"                                          # FeatureContext::fillField()
+    And I press "searchbutton"                                                # FeatureContext::pressButton()
+    And I wait for 20 seconds                                                 # FeatureContext::iWaitForSeconds()
+    When I click on "beam"                                                    # FeatureContext::iClickOn()
+    Then I should see "Longitudinal Single Bunch Instability Study on BEPCII" # FeatureContext::assertPageContainsText()
+
+@sprint1
+Feature: (Req ID: 2) When a search is submitted, it should create word cloud of the
+    top X number of papers in the ACM and IEEE digital library that match
+    the provided criteria
+
+  Scenario: User can see the word cloud of the top 5 of papers after searching # features/sprint1/WordCloudCreate.feature:6
+    for research with last name "wang"
+    Given I am on "/WordCloud.html"                                            # FeatureContext::visit()
+    And I fill in "search_input" with "wang"                                   # FeatureContext::fillField()
+    When I fill in "x_input" with "5"                                          # FeatureContext::fillField()
+    And I press "searchbutton"                                                 # FeatureContext::pressButton()
+    And I wait for 10 seconds                                                  # FeatureContext::iWaitForSeconds()
+    Then I should see "beam"                                                   # FeatureContext::assertPageContainsText()
+    And I should see "factor"                                                  # FeatureContext::assertPageContainsText()
+      The text "factor" was not found anywhere in the text of the current page.
+
+5 scenarios (2 passed, 3 failed)
+34 steps (30 passed, 1 skipped, 3 failed)
+1m42.187s
