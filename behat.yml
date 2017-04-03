@@ -1,7 +1,7 @@
 default:
   extensions:
     Behat\MinkExtension\Extension:
-      base_url:  'http://localhost/project2/WordCloud.html'
+      base_url:  'http://localhost/project2'
       default_session: selenium2
       browser_name: 'firefox'
       selenium2:                    

@@ -1,8 +1,9 @@
+@sprint1
 Feature: (Req ID: 2) User can input the desired number of papers 
 		  that is going to be returned
 Scenario: User can input X in a textbox on initial page
 
-Given I am on "http://localhost/project2/WordCloud.html"
+Given I am on "/WordCloud.html"
 	And I fill in "search_input" with "wang"
 When I fill in "x_input" with "5"
 	And I press "searchbutton"

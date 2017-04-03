@@ -68,4 +68,20 @@ class FeatureContext extends MinkContext
  
         $element->click();
     }
+
+    /**
+     * @Given /^I click on "([^"]*)"$/
+     */
+    public function iClickOn($arg1)
+    {
+        $session = $this->getSession();
+        $element = $session->getPage()->find('xpath',
+            $session->getSelectorsHandler()->selectorToXpath('xpath', '*//*[text()="'. $arg1 .'"]')
+        );
+        if (null === $element) {
+            throw new \InvalidArgumentException(sprintf('Cannot find text: "%s"', $arg1));
+        }
+ 
+        $element->click();
+    }
 }

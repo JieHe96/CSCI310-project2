@@ -15,6 +15,6 @@ Black-box Testing
 ---------------------------------------------------------------------- 
 1.	Open terminal, change directory to: Desktop/project2  
 2.	Run command line  
-php bin/behat --out report/blackresult.out 
+php bin/behat --out report/blackresult.out --tags '@sprint1'
 3.	The test result is generated as ./report/blackresult.out 
   

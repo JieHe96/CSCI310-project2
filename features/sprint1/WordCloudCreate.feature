@@ -6,7 +6,7 @@ Feature: (Req ID: 2) When a search is submitted, it should create word cloud of 
 Scenario: User can see the word cloud of the top 5 of papers after searching 
 		for research with last name "wang"
 
-Given I am on "http://localhost/project2/WordCloud.html"
+Given I am on "/WordCloud.html"
 	And I fill in "search_input" with "wang"
 When I fill in "x_input" with "5"
 	And I press "searchbutton"
