@@ -15,6 +15,6 @@ Black-box Testing
 ---------------------------------------------------------------------- 
 1.	Open terminal, change directory to: Desktop/project2  
 2.	Run command line  
-php bin/behat  
-3.	The output is generated as  
+php bin/behat --out report/blackresult.out 
+3.	The test result is generated as ./report/blackresult.out 
   

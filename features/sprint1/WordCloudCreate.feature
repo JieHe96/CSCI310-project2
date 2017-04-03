@@ -1,3 +1,4 @@
+@sprint1
 Feature: (Req ID: 2) When a search is submitted, it should create word cloud of the 
 		  top X number of papers in the ACM and IEEE digital library that match 
 		  the provided criteria
