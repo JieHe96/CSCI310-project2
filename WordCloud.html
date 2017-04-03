@@ -130,25 +130,25 @@
 	function displayWordCloud(){
 		document.querySelector("#wordcloudDiv").style.display = "none";
 		document.querySelector("#progressContainer").style.display = "block";
+		// d3.select("svg").remove()
+		// alltext = ' ';
+ 	// 	var table = "<table id = 'papertable'>";
+		// var row = "<tr bgcolor='lightblue'><th style='width:100px;'>Title (click to see Abstract)</th>";
+		// row += "<th>Authors</th><th>Download</th></tr>";
+		// table += row;
+		// for(var i=0; i<papers.length; i++){
+		// 	row = "<tr bgcolor='lightyellow'>"
+		// 	row += "<td><div style='width: 200px; color:grey;' onclick='displayAbstract(this)'>";
+		// 	row += papers[i].title + "</div></td>";
+		// 	row += "<td>" + papers[i].authors + "</td>";
+		// 	row += "<td><a href='#' onclick='downloadURI(this)'>" + papers[i].downloadlink + "</td>";
+		// 	row += "<tr>";
+		// 	table += row;
 
-		alltext = ' ';
- 		var table = "<table id = 'papertable'>";
-		var row = "<tr bgcolor='lightblue'><th style='width:100px;'>Title (click to see Abstract)</th>";
-		row += "<th>Authors</th><th>Download</th></tr>";
-		table += row;
-		for(var i=0; i<papers.length; i++){
-			row = "<tr bgcolor='lightyellow'>"
-			row += "<td><div style='width: 200px; color:grey;' onclick='displayAbstract(this)'>";
-			row += papers[i].title + "</div></td>";
-			row += "<td>" + papers[i].authors + "</td>";
-			row += "<td><a href='#' onclick='downloadURI(this)'>" + papers[i].downloadlink + "</td>";
-			row += "<tr>";
-			table += row;
-
-		}
-		table += "</table>";
-		document.querySelector("#papersDiv").innerHTML = table;
-		document.querySelector("#papersDiv").style.visibility = "visible";
+		// }
+		// table += "</table>";
+		// document.querySelector("#papersDiv").innerHTML = table;
+		// document.querySelector("#papersDiv").style.visibility = "visible";
 		frequency_list = [];
 		textnum = 0;
 		processednum = 0;
@@ -222,7 +222,11 @@
 
 		var word_title = [];
 
-		var top_freq = sorted_list[0][1];
+		var top_freq = 0;
+
+		if(sorted_list.length != 0) {
+			top_freq = sorted_list[0][1];
+		}
 		//console.log(sorted_list);
 		var size = sorted_list.length;
 		if(size > 250) {size = 250;}
