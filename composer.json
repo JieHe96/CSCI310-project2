@@ -4,7 +4,9 @@
         "behat/mink-goutte-driver": "*",
         "behat/mink-selenium2-driver": "*",
         "behat/behat": "2.4@stable",
-        "behat/mink-extension": "*"
+        "behat/mink-extension": "*",
+        "phpunit/php-code-coverage": "^5.0",
+        "symfony/console": "*"
     },
     "minimum-stability": "dev",
     "config": {
