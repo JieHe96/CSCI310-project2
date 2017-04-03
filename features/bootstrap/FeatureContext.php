@@ -20,8 +20,6 @@ use Behat\MinkExtension\Context\MinkContext;
  */
 class FeatureContext extends MinkContext
 {
-
-
     /**
      * Initializes context.
      * Every scenario gets it's own context object.
@@ -44,6 +42,9 @@ class FeatureContext extends MinkContext
 //        doSomethingWith($argument);
 //    }
 //
+
+
+
     /**
      * @Given /^I wait for (\d+) seconds$/
      */
@@ -67,9 +68,4 @@ class FeatureContext extends MinkContext
  
         $element->click();
     }
-	
- 
-
-
-
 }
