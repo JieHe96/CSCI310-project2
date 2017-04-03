@@ -1,4 +1,4 @@
-Team12 Testing
+Team Q Testing
 
 White-box Testing
 -------------------------------------------------------------------
