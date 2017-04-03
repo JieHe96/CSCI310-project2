@@ -84,4 +84,19 @@ class FeatureContext extends MinkContext
  
         $element->click();
     }
+
+    /**
+     * @Then /^I should see "([^"]*)" in the table$/
+     */
+    public function iShouldSeeInTheTable($arg1)
+    {
+	$td = $this->getSession()->getPage()->find('css',
+        	sprintf('table tbody tr td:contains("%s")', $arg1)
+    	);
+	if (null == $td) {
+        	throw new PendingException();
+	}
+    }
+
+
 }
