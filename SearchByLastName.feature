@@ -5,5 +5,5 @@ Scenario: User can search by researchers’ last name
 Given I am on "http://localhost/project2/WordCloud.html"
 When I fill in "search_input" with "wang"
 And I press "searchbutton"
-And I wait for 5 seconds
+And I wait for 15 seconds
 Then I should see "attack"
