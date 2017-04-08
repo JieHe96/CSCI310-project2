@@ -22,7 +22,7 @@ class FeatureContext extends MinkContext
 {
     /**
      * Initializes context.
-     * Every scenario gets it's own context object.
+     * Every scenario gets its own context object.
      *
      * @param   array   $parameters     context parameters (set them up through behat.yml)
      */
@@ -86,6 +86,17 @@ class FeatureContext extends MinkContext
     }
 
     /**
+     * @Given /^I wait for the word cloud to appear$/
+     */
+    public function iWaitForTheWordCloudToAppear()
+    {
+        $this->getSession()->wait(5000, "$('#wordcloudDiv').children().length > 0");
+        //https://github.com/Behat/MinkExtension-example/blob/master/features/bootstrap/InheritedFeatureContext.php
+        //Error - $ is not defined......
+    }
+
+
+    /**
      * @Then /^I should see "([^"]*)" in the table$/
      */
     public function iShouldSeeInTheTable($arg1)
@@ -97,6 +108,15 @@ class FeatureContext extends MinkContext
         	throw new PendingException();
 	}
     }
+
+    /**
+     * @Then /^I should see (\d+) columns$/
+     */
+    public function iShouldSeeColumns($num)
+    {
+        $this->assertSession()->elementsCount('css', "th", intval($num));
+    }
+
 
 
 }
