@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="Alltest" file="/home/student/Desktop/CSCI310-project2/phptest/whitetests.php" tests="3" assertions="5" errors="0" failures="0" skipped="0" time="0.004220">
-    <testcase name="testPaperConstructor" class="Alltest" file="/home/student/Desktop/CSCI310-project2/phptest/whitetests.php" line="11" assertions="1" time="0.001308"/>
-    <testcase name="testPaperSet" class="Alltest" file="/home/student/Desktop/CSCI310-project2/phptest/whitetests.php" line="23" assertions="3" time="0.001414"/>
-    <testcase name="testAPIcommunicatorConstructor" class="Alltest" file="/home/student/Desktop/CSCI310-project2/phptest/whitetests.php" line="41" assertions="1" time="0.001498"/>
+  <testsuite name="Alltest" file="/home/student/Desktop/CSCI310-project2/phptest/whitetests.php" tests="3" assertions="5" errors="0" failures="0" skipped="0" time="0.002716">
+    <testcase name="testPaperConstructor" class="Alltest" file="/home/student/Desktop/CSCI310-project2/phptest/whitetests.php" line="11" assertions="1" time="0.000978"/>
+    <testcase name="testPaperSet" class="Alltest" file="/home/student/Desktop/CSCI310-project2/phptest/whitetests.php" line="23" assertions="3" time="0.000947"/>
+    <testcase name="testAPIcommunicatorConstructor" class="Alltest" file="/home/student/Desktop/CSCI310-project2/phptest/whitetests.php" line="41" assertions="1" time="0.000791"/>
   </testsuite>
 </testsuites>

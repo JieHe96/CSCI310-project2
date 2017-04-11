@@ -267,8 +267,13 @@
 
 		alltext = ' ';
  		var table = "<table id = 'papertable'>";
-		var row = "<tr bgcolor='lightblue'><th style='width:100px;'>Title (click to see Abstract)</th>";
-		row += "<th>Authors</th><th>Download</th><th>Frequency</th></tr>";
+		var row = "<tr bgcolor='lightblue'>";
+		row += "<th style='width:100px;'><div onclick='sortTable(0)'>Title (click to see Abstract)</div></th>";
+		row += "<th><div onclick='sortTable(1)'>Authors</div></th>"
+		row += "<th><div onclick='sortTable(2)'>Download</div></th> "
+		row += "<th><div onclick='sortTable(3)'>Frequency</div></th></tr>";
+		
+	
 		table += row;
 		for(var i=0; i<papers.length; i++){
 			for(var j = 0; j < title_freq_list.length; j++) {
@@ -280,7 +285,7 @@
 					row += "<td>" + papers[i].authors + "</td>";
 					row += "<td><a href='#' onclick='downloadURI(this)'>" + papers[i].downloadlink + "</td>";
 					row += "<td>" + title_freq_list[j].freq + "</td>"
-					row += "<tr>";
+					row += "</tr>";
 					table += row;
 					break;
 				}
@@ -361,6 +366,52 @@
 		bar.style.width = processednum/textnum*200 +"px";
 
 	}
+
+function sortTable(j) {
+  var table, rows, switching, i, x, y, shouldSwitch;
+  table = document.getElementById("papertable");
+  switching = true;
+  /*Make a loop that will continue until
+  no switching has been done:*/
+  while (switching) {
+    //start by saying: no switching is done:
+    switching = false;
+    rows = table.getElementsByTagName("tr");
+    /*Loop through all table rows (except the
+    first, which contains table headers):*/
+    for (i = 1; i < (rows.length - 1); i++) {
+      //start by saying there should be no switching:
+      shouldSwitch = false;
+      /*Get the two elements you want to compare,
+      one from current row and one from the next:*/
+      x = rows[i].getElementsByTagName("td")[j];
+      y = rows[i + 1].getElementsByTagName("td")[j];
+
+      //check if the two rows should switch place:
+      if (j == 3) { // if sorting the frequency
+      	if (parseFloat(x.innerHTML) < parseFloat(y.innerHTML) ) {
+        //if so, mark as a switch and break the loop:
+        shouldSwitch= true;
+        break;
+      	}
+      }
+      else {
+	      if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+	        //if so, mark as a switch and break the loop:
+	        shouldSwitch= true;
+	        break;
+	      }
+	  }
+    }
+    if (shouldSwitch) {
+      /*If a switch has been marked, make the switch
+      and mark that a switch has been done:*/
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+    }
+  }
+}
+
 
 </script>
 </div>
