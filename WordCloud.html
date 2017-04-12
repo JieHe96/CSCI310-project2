@@ -270,8 +270,9 @@
 		var row = "<tr bgcolor='lightblue'>";
 		row += "<th style='width:100px;'><div onclick='sortTable(0)'>Title (click to see Abstract)</div></th>";
 		row += "<th><div onclick='sortTable(1)'>Authors</div></th>"
-		row += "<th><div onclick='sortTable(2)'>Download</div></th> "
-		row += "<th><div onclick='sortTable(3)'>Frequency</div></th></tr>";
+		row += "<th><div onclick='sortTable(2)'>Conference</div></th>"
+		row += "<th><div onclick='sortTable(3)'>Download</div></th> "
+		row += "<th><div onclick='sortTable(4)'>Frequency</div></th></tr>";
 		
 	
 		table += row;
@@ -283,7 +284,7 @@
 					row += "<td><div style='width: 200px; color:grey;' onclick='displayAbstract(this)'>";
 					row += papers[i].title + "</div></td>";
 					row += "<td><div onclick='newSearch(this)'>" +papers[i].authors + "</div></td>";
-
+					row += "<td>"+ "testing" +"</td>";
 					row += "<td><a href='#' onclick='downloadURI(this)'>" + papers[i].downloadlink + "</td>";
 					row += "<td>" + title_freq_list[j].freq + "</td>"
 					row += "</tr>";
@@ -295,7 +296,7 @@
 		table += "</table>";
 		document.querySelector("#papersDiv").innerHTML = table;
 		document.querySelector("#papersDiv").style.visibility = "visible";
-		sortTable(3);
+		sortTable(4);
 	}
 
 	function convertToText(response, paperTitle){
@@ -387,7 +388,7 @@
 		    	y = rows[i + 1].getElementsByTagName("td")[j];
 
 		    	//check if the two rows should switch place:
-		    	if (j == 3) { // if sorting the frequency
+		    	if (j == 4) { // if sorting the frequency
 		    		if (parseFloat(x.innerHTML) < parseFloat(y.innerHTML) ) {
 			        	//if so, mark as a switch and break the loop:
 			        	shouldSwitch= true;
