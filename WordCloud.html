@@ -161,12 +161,17 @@
 		document.querySelector("#wordcloudDiv").style.display = "block";
 	}
 
-	function displayAbstract(tablecell){
+	function displayAbstract(tablecell,selectedword){ 
+//	function displayAbstract(tablecell){
 		var clicktitle = tablecell.innerHTML;
 		for(var i=0; i<papers.length; i++){
 			if(papers[i].title == clicktitle){
 				document.querySelector("#papersDiv").style.display = "none";
-				document.querySelector("#abstractContent").innerHTML = papers[i].abstract;
+				//document.querySelector("#abstractContent").innerHTML = papers[i].abstract;
+				var paper_abstract = papers[i].abstract;	// highlighting the selected word
+				paper_abstract = paper_abstract.replace(new RegExp(" "+selectedword+" ", 'gi'), 
+								'<span class="highlight">'+" "+selectedword+" "+'</span>');
+				document.querySelector("#abstractContent").innerHTML = paper_abstract;
 				document.querySelector("#abstractDiv").style.display = "block";
 				return;
 			}
@@ -281,7 +286,10 @@
 				console.log(title_freq_list[j].title);
 				if(papers[i].title == title_freq_list[j].title) {
 					row = "<tr bgcolor='lightyellow'>"
-					row += "<td><div style='width: 200px; color:grey;' onclick='displayAbstract(this)'>";
+					row += "<td><div "+"id="+word+
+						" style='width: 200px; color:grey;' onclick='displayAbstract(this,this.id)'>";
+					//add an id to the div to enable highlighting the word in the abstract
+					//row += "<td><div style='width: 200px; color:grey;' onclick='displayAbstract(this)'>";
 					row += papers[i].title + "</div></td>";
 					row += "<td><div onclick='newSearch(this)'>" +papers[i].authors + "</div></td>";
 					row += "<td>"+ "testing" +"</td>";
