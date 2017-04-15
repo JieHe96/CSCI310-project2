@@ -22,7 +22,20 @@
 <input id = "x_input" placeholder="# of Papers">
 <br>
 <button id = "searchbutton" onclick="searchArticle();">Search</button>
+
+<div class="dropdown">
+  <button class="dropbtn">Recent Search History</button>
+  <div class="dropdown-content" style="left:0;">
+<!--     <a href="#">Link 1</a>
+    <a href="#">Link 2</a>
+    <a href="#">Link 3</a> -->
+  </div>
 </div>
+
+</div>
+
+
+
 <div id= "papersDiv"></div>
 <div id= "abstractDiv">
 <div style="font-size: 20px;">Abstract</div>
@@ -101,7 +114,7 @@
 	function searchArticle(){
 		var searchinput = document.querySelector("#search_input").value;
 		var xinput = document.querySelector("#x_input").value;
-
+		document.querySelector(".dropdown-content").innerHTML += '<a>' + searchinput + '</a>';
 		$.ajax({
       		url: 'php/articlesearch.php',
     		type: 'POST',
