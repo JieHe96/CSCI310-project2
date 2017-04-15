@@ -280,6 +280,7 @@
 	}
 
 	function displayPapers(word) {
+		title_freq_list = [];
 		for(var i = 0; i < word_title_list.length; i++) {
 			for(var j = 0; j < word_title_list[i].length; j++) {
 				if(word_title_list[i][j].text == word) {
@@ -293,6 +294,7 @@
 
 		alltext = ' ';
  		var table = "<table id = 'papertable'>";
+ 		table.innerHTML = "";
 		var row = "<tr bgcolor='lightblue'>";
 		row += "<th style='width:100px;'><div onclick='sortTable(0)'>Title (click to see Abstract)</div></th>";
 		row += "<th><div onclick='sortTable(1)'>Authors</div></th>"
