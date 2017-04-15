@@ -443,25 +443,26 @@
 	}
 
 	function newSearch(i){
-			var searchinput = i.innerHTML;
-			document.querySelector("#search_input").value = searchinput;
-			var xinput = document.querySelector("#x_input").value;
-			$.ajax({
-	      		url: 'php/articlesearch.php',
-	    		type: 'POST',
-	      		data: {searchinput:searchinput, xinput:xinput},
-	      		success : function(data) {
-	        		if(data=="error"){alert("Erro occurred");}
-	        		else{
-	         			papers = eval(data);
-	         			displayWordCloud();
-	         		//	console.log(data);
-	        		} 
-	      		},
-	      		error : function() {
-	        		alert('Please type in valid artist name.');
-	      		}
-	    	});
+		var searchinput = i.innerHTML;
+		document.querySelector("#search_input").value = searchinput;
+		var xinput = document.querySelector("#x_input").value;
+		document.querySelector(".dropdown-content").innerHTML += '<a>' + searchinput + '</a>';
+		$.ajax({
+      		url: 'php/articlesearch.php',
+    		type: 'POST',
+      		data: {searchinput:searchinput, xinput:xinput},
+      		success : function(data) {
+        		if(data=="error"){alert("Erro occurred"); console.log("error");}
+        		else{
+         			papers = eval(data);
+         			displayWordCloud();
+         			//console.log(data);
+        		} 
+      		},
+      		error : function() {
+        		alert('Please type in valid artist name.');
+      		}
+		});
 	}
 
 	function downloadimage() { //image
