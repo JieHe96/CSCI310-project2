@@ -25,13 +25,22 @@ class APIcommunicator{
 		
 	}
 	function searchByAuthor($searchinput,$xinput,$isTest){
-		$searchinput = str_replace(" ","+",$searchinput);
-		$searchURL = "http://api.crossref.org/works?filter=has-full-text:true,has-abstract:true";
-		//$searchURL = "http://api.crossref.org/works?filter=member:320";
-		$searchURL .= "&query.author=".$searchinput;
-		$searchURL .= "&rows=".$xinput;		
-		$result = $this->execSearchTerm($searchURL);
-		$result = json_decode($result, true);
+		for($i=0; $i<20; $i++){
+			$searchinput = str_replace(" ","+",$searchinput);
+			$searchURL = "http://api.crossref.org/works?filter=has-full-text:true,has-abstract:true";
+			//$searchURL = "http://api.crossref.org/works?filter=member:320";
+			$searchURL .= "&query.author=".$searchinput;
+			$searchURL .= "&rows=".$xinput;		
+			$result = $this->execSearchTerm($searchURL);
+			$result = json_decode($result, true);
+			if(array_key_exists("items",$result["message"])){
+				break;
+			}
+		}
+		if(!array_key_exists("items",$result["message"])){
+			echo "error";
+			return;
+		}
 		$result = $result["message"]["items"];
 		$this->crossrefACMgenerate($result);
 		//echo var_dump($this->papers);

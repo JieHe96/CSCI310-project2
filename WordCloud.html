@@ -31,7 +31,8 @@
     <a href="#">Link 3</a> -->
   </div>
 </div>
-
+<br>
+<button id="button_downloadimage" onclick="downloadimage()" disabled=true>Download the Cloud</button>
 </div>
 
 
@@ -73,8 +74,9 @@
 	      .fontSize(function(d) { return d.size; })
 	      .on("end", draw)
 	      .start();
-	      document.getElementById("wordcloudDiv").innerHTML +=
-	      	'<button id="button_downloadimage" onclick="downloadimage()">Download the Cloud</button>';
+	    //  document.getElementById("searchDiv").innerHTML +=
+	      //	'<button id="button_downloadimage" onclick="downloadimage()">Download the Cloud</button>';
+  		document.getElementById("button_downloadimage").disabled = false;
   	}
 
 	//draw the word cloud using jasondavies reference
@@ -120,11 +122,11 @@
     		type: 'POST',
       		data: {searchinput:searchinput, xinput:xinput},
       		success : function(data) {
-        		if(data=="error"){alert("Erro occurred");}
+        		if(data=="error"){alert("Erro occurred"); console.log("error");}
         		else{
          			papers = eval(data);
          			displayWordCloud();
-         		//	console.log(data);
+         			//console.log(data);
         		} 
       		},
       		error : function() {
@@ -199,6 +201,9 @@
 		document.querySelector("#papersDiv").style.display = "block";
 	}
 
+	function isLetter(s){
+  		return s.match("^[a-zA-Z\(\)]+$");    
+	}
 	function parseText(text_list, title) {
 		var text_str = '';
 		for(var i = 0; i < text_list.length; i++) {
@@ -212,7 +217,7 @@
 				ele = ele.substring(0, ele.length - 1);
 			}
 			ele = ele.toLowerCase();
-			if(ele != "" && ele != " " && ele != "a" && ele != "b" && ele != "c" && ele != "d" && ele != "e" &&
+			if(isLetter(ele)&&ele != "" && ele != " " && ele != "a" && ele != "b" && ele != "c" && ele != "d" && ele != "e" &&
 				ele != "f" && ele != "g" && ele != "h" && ele != "i" && ele != "j" && ele != "k" && ele != "l" &&
 				ele != "m" && ele != "n" && ele != "o" && ele != "p" && ele != "q" && ele != "r" && ele != "s" &&
 				ele != "t" && ele != "u" && ele != "v" && ele != "w" && ele != "x" && ele != "y" && ele != "z" &&
