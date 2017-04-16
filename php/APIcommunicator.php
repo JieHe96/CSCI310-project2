@@ -1,4 +1,5 @@
 <?php
+use PHPUnit\Framework\TestCase;
 
 include_once('paper.php');
 class APIcommunicator{
@@ -7,14 +8,10 @@ class APIcommunicator{
 	function __construct(){
 		$this->papers = [];
 	}
-
+	/**
+     * @codeCoverageIgnore
+     */	
 	function searchByKeywords($searchinput,$xinput,$isTest){
-		/*crossref API */
-		//$searchURL = "http://api.crossref.org/works?query.contributor=".$searchinput."&filter=full-text.type:application/pdf&rows=".$xinput;
-		//$searchURL = "http://api.crossref.org/works?query.author=".$searchinput."&filter=publisher-name:Association+for+Computing+Machinery+(ACM)&rows=".$xinput;
-		//$searchURL = "http://api.crossref.org/works?query.author=wang&filter=publisher-name:Association+for+Computing+Machinery+(ACM)";
-		
-		//echo var_dump($this->papers);
 		/* arxiv API */
 		
 		$searchURL = "http://export.arxiv.org/api/query?search_query=all:".$searchinput."&start=0&max_results=".$xinput;
@@ -25,7 +22,7 @@ class APIcommunicator{
 		
 	}
 	function searchByAuthor($searchinput,$xinput,$isTest){
-		for($i=0; $i<20; $i++){
+		for($i=0; $i<5; $i++){
 			$searchinput = str_replace(" ","+",$searchinput);
 			$searchURL = "http://api.crossref.org/works?filter=has-full-text:true,has-abstract:true";
 			//$searchURL = "http://api.crossref.org/works?filter=member:320";
@@ -38,14 +35,17 @@ class APIcommunicator{
 			}
 		}
 		if(!array_key_exists("items",$result["message"])){
-			echo "error";
-			return;
+			if(!$isTest) echo "error";//@codeCoverageIgnore
+			else return "error";
 		}
 		$result = $result["message"]["items"];
 		$this->crossrefACMgenerate($result);
-		//echo var_dump($this->papers);
-		echo json_encode($this->papers);
+		if($isTest){
+			return $this->papers;
+		}
+		echo json_encode($this->papers);//@codeCoverageIgnore
 	}
+	
 	function execSearchTerm($searchTerm) {
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $searchTerm);
@@ -56,6 +56,9 @@ class APIcommunicator{
 		return $searchresult;
 	}
 	/* arxiv API */
+	/**
+     * @codeCoverageIgnore
+     */	
 	function generatePapers($xmlobject){
 		for($i=0; $i<sizeof($xmlobject); $i++){
 			$paper = new Paper();
@@ -114,9 +117,6 @@ class APIcommunicator{
 		}
 	}
 
-	function getFullText(){
-
-	}
 }
 
 

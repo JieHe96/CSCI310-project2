@@ -1,4 +1,5 @@
 <?php
+use PHPUnit\Framework\TestCase;
 class Paper{
 	public $title;
 	public $downloadlink;
@@ -21,7 +22,6 @@ class Paper{
 	}
 	function setAuthors($authors){
 		array_push($this->authors,$authors);
-	//	$this->authors = $authors;
 	}
 	function getAuthors(){
 		return $this->authors;
@@ -29,27 +29,44 @@ class Paper{
 	function setDownloadLink($link){
 		//$this->downloadlink = "http://dl.acm.org/".$link;
 		$this->downloadlink = $link;
-
 	}
+	/**
+     * @codeCoverageIgnore
+     */	
 	function getDownloadLink(){
 		return $this->downloadlink;
 	}
+	/**
+     * @codeCoverageIgnore
+     */	
 	function setAbstract($abstract){
 		$this->abstract = $abstract;
 	}
+	/**
+     * @codeCoverageIgnore
+     */	
 	function getAbstract(){
 		return $this->abstract;
 		
 	}
+	/**
+     * @codeCoverageIgnore
+     */	
 	function setDOI($doi){
 		$this->doi = $doi;
 	}
+	/**
+     * @codeCoverageIgnore
+     */	
 	function getDOI(){
 		return $this->doi;
 	}
+	/**
+     * @codeCoverageIgnore
+     */	
 	function setConference($conf){
 		$this->conference = $conf;
 	}
-
+	
 }
 ?>
