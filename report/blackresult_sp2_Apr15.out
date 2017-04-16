@@ -1,0 +1,110 @@
+@sprint2
+Feature: (Req ID: 4) View list of papers that mention that word
+  			by clicking on the word in word cloud
+
+  Scenario: (Req ID: 4) User can see five columns including title, author list, # features/sprint1/SeeFiveColumnsofInfo.feature:4
+    			conference, download link, and word frequency
+    Given I am on "/WordCloud.html"                                             # FeatureContext::visit()
+    When I fill in "search_input" with "wang"                                   # FeatureContext::fillField()
+    And I fill in "x_input" with "5"                                            # FeatureContext::fillField()
+    And I press "searchbutton"                                                  # FeatureContext::pressButton()
+    And I wait for 10 seconds                                                   # FeatureContext::iWaitForSeconds()
+    Then I should see "bunch"                                                   # FeatureContext::assertPageContainsText()
+      The text "bunch" was not found anywhere in the text of the current page.
+    When I click on "bunch"                                                     # FeatureContext::iClickOn()
+    Then I should see 5 columns                                                 # FeatureContext::iShouldSeeColumns()
+
+@sprint2
+Feature: (Req ID: 11) For each paper, clicking on an author in its author list will do a new search based on that author
+
+  Scenario: When I click on an author, I should be able to search for the author # features/sprint2/ClickAuthor.feature:4
+    Given I am on "/WordCloud.html"                                              # FeatureContext::visit()
+    And I fill in "search_input" with "wang"                                     # FeatureContext::fillField()
+    And I fill in "x_input" with "5"                                             # FeatureContext::fillField()
+    And I press "searchbutton"                                                   # FeatureContext::pressButton()
+    And I wait for 10 seconds                                                    # FeatureContext::iWaitForSeconds()
+    Then I should see "bunch"                                                    # FeatureContext::assertPageContainsText()
+      The text "bunch" was not found anywhere in the text of the current page.
+    When I click on "bunch"                                                      # FeatureContext::iClickOn()
+    And I click on "insert other author"                                         # FeatureContext::iClickOn()
+    Then I should see "insert word"                                              # FeatureContext::assertPageContainsText()
+
+@sprint2
+Feature: (Req ID: 12) For each paper, clicking on a paper's conference name will list other papers from that conference
+
+  Scenario: As a user, when I click on a paper's conference name, I should be able to see other papers from that conference # features/sprint2/ClickConference.feature:4
+    Given I am on "/WordCloud.html"                                                                                         # FeatureContext::visit()
+    And I fill in "search_input" with "wang"                                                                                # FeatureContext::fillField()
+    And I fill in "x_input" with "5"                                                                                        # FeatureContext::fillField()
+    And I press "searchbutton"                                                                                              # FeatureContext::pressButton()
+    And I wait for 10 seconds                                                                                               # FeatureContext::iWaitForSeconds()
+    Then I should see "bunch"                                                                                               # FeatureContext::assertPageContainsText()
+      The text "bunch" was not found anywhere in the text of the current page.
+    When I click on "bunch"                                                                                                 # FeatureContext::iClickOn()
+    And I click on "[ACM conference]"                                                                                       # FeatureContext::iClickOn()
+    Then I should see "[other papers from ACM conference]"                                                                  # FeatureContext::assertPageContainsText()
+
+@sprint2
+Feature: (Req ID: 7a) For each paper, clicking on a paper's title will allow the user to read the abstract with the word highlighted
+
+  Scenario: When I click on a paper's title, I should be able to see the abstract with the word highlighted                 # features/sprint2/ClickTitle.feature:4
+    Given I am on "/WordCloud.html"                                                                                         # FeatureContext::visit()
+    And I fill in "search_input" with "wang"                                                                                # FeatureContext::fillField()
+    And I fill in "x_input" with "5"                                                                                        # FeatureContext::fillField()
+    And I press "searchbutton"                                                                                              # FeatureContext::pressButton()
+    And I wait for 10 seconds                                                                                               # FeatureContext::iWaitForSeconds()
+    And I click on "bunch"                                                                                                  # FeatureContext::iClickOn()
+      Cannot find text: "bunch"
+    When I click on "Longitudinal Single Bunch Instability Study on BEPCII"                                                 # FeatureContext::iClickOn()
+    Then I should see "Abstract"                                                                                            # FeatureContext::assertPageContainsText()
+    And I should see "the longitudinal loss factor for the bunch are obtained"                                              # FeatureContext::assertPageContainsText()
+
+@sprint2
+Feature: (Req ID: 5) Export lists of papers as PDFs and plain text
+
+  Scenario: Export as PDF                                                                                                   # features/sprint2/Export.feature:4
+    Given I am on "/WordCloud.html"                                                                                         # FeatureContext::visit()
+    And I fill in "search_input" with "wang"                                                                                # FeatureContext::fillField()
+    And I fill in "x_input" with "5"                                                                                        # FeatureContext::fillField()
+    And I press "searchbutton"                                                                                              # FeatureContext::pressButton()
+    And I wait for 10 seconds                                                                                               # FeatureContext::iWaitForSeconds()
+    And I click on "bunch"                                                                                                  # FeatureContext::iClickOn()
+      Cannot find text: "bunch"
+    When I check "export as PDF"                                                                                            # FeatureContext::checkOption()
+    And I click on "exportButton"                                                                                           # FeatureContext::iClickOn()
+    Then I should see PDF downloaded
+
+  Scenario: Export as plain text                                                                                            # features/sprint2/Export.feature:16
+    Given I am on "/WordCloud.html"                                                                                         # FeatureContext::visit()
+    And I fill in "search_input" with "wang"                                                                                # FeatureContext::fillField()
+    And I fill in "x_input" with "5"                                                                                        # FeatureContext::fillField()
+    And I press "searchbutton"                                                                                              # FeatureContext::pressButton()
+    And I wait for 10 seconds                                                                                               # FeatureContext::iWaitForSeconds()
+    And I click on "bunch"                                                                                                  # FeatureContext::iClickOn()
+      Cannot find text: "bunch"
+    When I check "export as plain text"                                                                                     # FeatureContext::checkOption()
+    And I click on "exportButton"                                                                                           # FeatureContext::iClickOn()
+    Then I should see plain text downloaded
+
+6 scenarios (6 failed)
+53 steps (30 passed, 15 skipped, 2 undefined, 6 failed)
+1m18.885s
+
+You can implement step definitions for undefined steps with these snippets:
+
+    /**
+     * @Then /^I should see PDF downloaded$/
+     */
+    public function iShouldSeePdfDownloaded()
+    {
+        throw new PendingException();
+    }
+
+    /**
+     * @Then /^I should see plain text downloaded$/
+     */
+    public function iShouldSeePlainTextDownloaded()
+    {
+        throw new PendingException();
+    }
+
