@@ -122,7 +122,7 @@
 	function searchArticle(){
 		var searchinput = document.querySelector("#search_input").value;
 		var xinput = document.querySelector("#x_input").value;
-		document.querySelector(".dropdown-content").innerHTML += '<a>' + searchinput + '</a>';
+		document.querySelector(".dropdown-content").innerHTML += '<a onclick="newSearch(this)">' + searchinput + '</a>';
 		$.ajax({
       		url: 'php/articlesearch.php',
     		type: 'POST',
@@ -455,6 +455,8 @@
 	}
 
 	function newSearch(i){
+		document.querySelector("#wordcloudDiv").style.display = "none";
+		document.querySelector("#papersDiv").style.visibility = "hidden";
 		var searchinput = i.innerHTML;
 		document.querySelector("#search_input").value = searchinput;
 		var xinput = document.querySelector("#x_input").value;
