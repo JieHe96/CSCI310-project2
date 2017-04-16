@@ -7,6 +7,11 @@
 	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	<script src="dom-to-image.js"></script> 
+	<script type="text/javascript" src="tableExport/tableExport.js"></script>
+	<script type="text/javascript" src="tableExport/jquery.base64.js"></script>
+	<script type="text/javascript" src="tableExport/jspdf/libs/sprintf.js"></script>
+	<script type="text/javascript" src="tableExport/jspdf/jspdf.js"></script>
+	<script type="text/javascript" src="tableExport/jspdf/libs/base64.js"></script>
 </head>
 <body>
 <div id = "outercontainer">
@@ -38,6 +43,7 @@
 
 
 <div id= "papersDiv"></div>
+<button id="exportTable">Export Table</button>
 <div id= "abstractDiv">
 <div style="font-size: 20px;">Abstract</div>
 <div id= "abstractContent"></div>
@@ -217,7 +223,7 @@
 				ele = ele.substring(0, ele.length - 1);
 			}
 			ele = ele.toLowerCase();
-			if(isLetter(ele)&&ele != "" && ele != " " && ele != "a" && ele != "b" && ele != "c" && ele != "d" && ele != "e" &&
+			if(isLetter(ele) && ele != "" && ele != " " && ele != "a" && ele != "b" && ele != "c" && ele != "d" && ele != "e" &&
 				ele != "f" && ele != "g" && ele != "h" && ele != "i" && ele != "j" && ele != "k" && ele != "l" &&
 				ele != "m" && ele != "n" && ele != "o" && ele != "p" && ele != "q" && ele != "r" && ele != "s" &&
 				ele != "t" && ele != "u" && ele != "v" && ele != "w" && ele != "x" && ele != "y" && ele != "z" &&
@@ -294,23 +300,23 @@
 
 		alltext = ' ';
  		var table = "<table id = 'papertable'>";
- 		table.innerHTML = "";
-		var row = "<tr bgcolor='lightblue'>";
-		row += "<th style='width:100px;'><div onclick='sortTable(0)'>Title (click to see Abstract)</div></th>";
+		var row = "<thead><tr bgcolor='lightblue'>";
+		row += "<th><div onclick='sortTable(0)'>Title (click to see Abstract)</div></th>";
 		row += "<th><div onclick='sortTable(1)'>Authors</div></th>"
 		row += "<th><div onclick='sortTable(2)'>Conference</div></th>"
 		row += "<th><div onclick='sortTable(3)'>Download</div></th> "
-		row += "<th><div onclick='sortTable(4)'>Frequency</div></th></tr>";
+		row += "<th><div onclick='sortTable(4)'>Frequency</div></th></tr></thead>";
 		
 	
 		table += row;
+		table +="<tbody>";
 		for(var i=0; i<papers.length; i++){
 			for(var j = 0; j < title_freq_list.length; j++) {
 				console.log(title_freq_list[j].title);
 				if(papers[i].title == title_freq_list[j].title) {
 					row = "<tr bgcolor='lightyellow'>"
 					row += "<td><div "+"id="+word+
-						" style='width: 200px; color:grey;' onclick='displayAbstract(this,this.id)'>";
+						" style='color:grey;' onclick='displayAbstract(this,this.id)'>";
 					//add an id to the div to enable highlighting the word in the abstract
 					//row += "<td><div style='width: 200px; color:grey;' onclick='displayAbstract(this)'>";
 					row += papers[i].title + "</div></td>";
@@ -324,10 +330,16 @@
 				}
 			}
 		}
+		table+="</tbody>";
+
 		table += "</table>";
 		document.querySelector("#papersDiv").innerHTML = table;
 		document.querySelector("#papersDiv").style.visibility = "visible";
+		// document.querySelector("#papersDiv").innerHTML += "<button id='exportTable' onclick='$('#papertable').tableExport({type:'pdf',escape:'false'})'>Export Table</button>";
 		sortTable(4);
+		document.querySelector("#exportTable").onclick = function() {
+			$('#papertable').tableExport({type:'pdf', pdfLeftMargin:1, pdfFontSize:10, ignoreColumn: [0], escape:'false'})
+		}
 	}
 
 	function convertToText(response, paperTitle){
