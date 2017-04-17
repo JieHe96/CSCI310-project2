@@ -316,7 +316,7 @@
 		row += "<th><div onclick='sortTable(2)'>Conference</div></th>"
 		row += "<th><div onclick='sortTable(3)'>Download</div></th>"
 		row += "<th>Bibtex</th> ";
-		row += "<th><div onclick='sortTable(4)'>Frequency</div></th>";
+		row += "<th><div onclick='sortTable(5)'>Frequency</div></th>";
 		row += "<th><div>SubSearch</div></th></tr></thead>";
 		
 	
@@ -354,7 +354,7 @@
 		document.querySelector("#papersDiv").innerHTML = table;
 		document.querySelector("#papersDiv").style.visibility = "visible";
 		// document.querySelector("#papersDiv").innerHTML += "<button id='exportTable' onclick='$('#papertable').tableExport({type:'pdf',escape:'false'})'>Export Table</button>";
-		sortTable(4);
+		sortTable(5);
 		document.querySelector("#exportDiv").style.visibility = "visible";
 		document.querySelector("#exportTablePDF").onclick = function() {
 			$('#papertable').tableExport({type:'pdf', pdfLeftMargin:1, pdfFontSize:10, ignoreColumn: [0], escape:'false'})
@@ -453,7 +453,7 @@
 		    	y = rows[i + 1].getElementsByTagName("td")[j];
 
 		    	//check if the two rows should switch place:
-		    	if (j == 4) { // if sorting the frequency
+		    	if (j == 5) { // if sorting the frequency
 		    		if (parseFloat(x.innerHTML) < parseFloat(y.innerHTML) ) {
 			        	//if so, mark as a switch and break the loop:
 			        	shouldSwitch= true;
