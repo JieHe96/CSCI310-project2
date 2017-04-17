@@ -125,12 +125,10 @@ class FeatureContext extends MinkContext
         $td = $this->getSession()->getPage()->find('css',
         	sprintf('table thead tr th:contains("%s")', $arg1)
     	);
-	if (null == $td) {
-        	throw new PendingException();
-	}
-	else {
-		$td -> click();
-	}
+    	if (null == $td) {
+            	throw new Exception("header not found");
+    	}
+    	$td -> click();
     }
 
     /**
@@ -138,12 +136,12 @@ class FeatureContext extends MinkContext
      */
     public function shouldPrecedeInTheColumnOfTable($arg1, $arg2, $arg3)
     {
-        $session = $this->getMainContext()->getSession(); //get the page
-	
+    $session = $this->getMainContext()->getSession(); //get the page
 	$element1 = $session->getPage()->find('xpath',
         	$session->getSelectorsHandler()->selectorToXpath('xpath', '//table[@id="papertable"]/tbody/tr[1]/td['.$arg3.']'));
 	$elementText1 = $element1->getText();
 
+    $session = $this->getMainContext()->getSession(); //get the page
 	$element2 = $session->getPage()->find('xpath',
         	$session->getSelectorsHandler()->selectorToXpath('xpath', '//table[@id="papertable"]/tbody/tr[2]/td['.$arg3.']'));
 	$elementText2 = $element2->getText();
@@ -161,12 +159,12 @@ class FeatureContext extends MinkContext
         $td = $this->getSession()->getPage()->find('css',
         	sprintf('table tbody tr td:contains("%s")', $arg1)
     	);
-	if (null == $td) {
-        	throw new Exception('Element not Found');
-	}
-	else {
-		$td -> click();
-	}
+    	if (null == $td) {
+            	throw new Exception('Element not Found');
+    	}
+    	else {
+    		$td -> click();
+    	}
     }
 
     /**
@@ -191,7 +189,7 @@ class FeatureContext extends MinkContext
     {
     	$session = $this->getSession(); 
         $element = $session->getPage()->find('css', $arg2); 
-	$element = $element-> mouseOver()->find('xpath', '//label[text()="'.$arg1.'"]');
+	   $element = $element-> mouseOver()->find('xpath', '//label[text()="'.$arg1.'"]');
     }
 
     /**
@@ -203,6 +201,78 @@ class FeatureContext extends MinkContext
         	throw new Exception('not downloaded');
     	}
     }
+
+    /**
+     * @Then /^I should see "([^"]*)" in the headers of table$/
+     */
+    public function iShouldSeeInTheHeadersOfTable($arg1)
+    {
+        $td = $this->getSession()->getPage()->find('css',
+            sprintf('table thead tr th:contains("%s")', $arg1)
+        );
+        if (null == $td) {
+                throw new Exception("header not found");
+        }
+    }
+
+    /**
+     * @Then /^I click on "([^"]*)" in the first row of bibtext column$/
+     */
+    public function iClickOnInTheFirstRowOfBibtextColumn($arg1)
+    {
+        $session = $this->getMainContext()->getSession(); //get the page
+    
+        $element1 = $session->getPage()->find('xpath',
+                $session->getSelectorsHandler()->selectorToXpath('xpath', '//table[@id="papertable"]/tbody/tr[1]/td[5]'));
+        $elementText1 = $element1->getText();
+
+        if ($elementText1 != $arg1 or $elementText1 === null) {
+                throw new Exception('Value not correct');
+        }
+        $element1-> click();
+    }
+
+    /**
+     * @Then /^I should see the Bibtex$/
+     */
+    public function iShouldSeeTheBibtex()
+    {
+        $windowNames = $this->getSession()->getWindowNames();
+        if(count($windowNames) > 1) {
+            $this->getSession()->switchToWindow($windowNames[1]);
+        }    
+        else {
+            throw new \ErrorException("Expected to see at least 2 windows opened"); 
+        }
+    }
+
+
+
+    /**
+     * @Then /^I check the "([^"]*)" and "([^"]*)"$/
+     */
+    public function iCheckTheAnd($arg1, $arg2)
+    {
+        $Page = $this->getSession()->getPage();
+        $isChecked = $Page->findField($arg1);
+        echo $isChecked.getText();
+        if ($isChecked === null) {
+            throw new Exception('Value 1 not correct');
+        }
+        else {
+            $isChecked.click();
+        }
+
+        $isChecked2 = $Page->findField($arg2);
+        if ($isChecked2 === null) {
+            throw new Exception('Value 2 not correct');
+        }
+        else {
+            $isChecked2.check();
+        }
+    }
+
+
 
 
 }

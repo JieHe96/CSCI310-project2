@@ -7,8 +7,8 @@ Given I am on "/WordCloud.html"
 And I fill in "search_input" with "steven"
 And I fill in "x_input" with "10"
 And I press "searchbutton"
-And I wait for 25 seconds
+And I wait for 28 seconds
 Then I click on "with"
 Then I click on "Steven Walczak" in the table
-And I wait for 25 seconds
-Then I should see "ffi"
+And I wait for 28 seconds
+Then I should see "neural"

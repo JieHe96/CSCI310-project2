@@ -7,7 +7,6 @@ Given I am on "/WordCloud.html"
 And I fill in "search_input" with "steven"
 And I fill in "x_input" with "10"
 And I press "searchbutton"
-And I wait for 25 seconds
+And I wait for 30 seconds
 Then I click on "with"
 Then I click on "Methodological Triangulation Using Neural Networks for Business Research" in the table
-Then the word "with" should be yellow in the "#abstractDiv" element
