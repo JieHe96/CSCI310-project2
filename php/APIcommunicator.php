@@ -111,10 +111,38 @@ class APIcommunicator{
 				$paper->setDOI("");
 			}	
 			*/
-			
+			$this->generateBibtex($paper,$xmlobject[$i]);
 			$paper->setDownloadLink($xmlobject[$i]["link"][0]["URL"]);
 			array_push($this->papers,$paper);
 		}
+	}
+	function generateBibtex($paper,$xmlobject){
+		$bibtex = "<div style='font-size:5px;'>";
+		$bibtex .= "@article{<br><div style='padding-left:10px;'>";
+		$bibtex .= "author = {";
+		for($i=0; $i<sizeof($paper->authors);$i++){
+			$bibtex .= $paper->authors[$i].", ";
+		}
+		$bibtex .= " },<br>";
+		$bibtex .= "title = {".$paper->getTitle()."},<br>";
+		if(array_key_exists ("DOI",$xmlobject)){
+			$bibtex .= "doi = {".$xmlobject["DOI"]."},<br>";
+		}
+		if(array_key_exists ("ISSN",$xmlobject)){
+			$bibtex .= "issn = {".$xmlobject["ISSN"][0]."},<br>";
+		}
+		if(array_key_exists ("created",$xmlobject)){
+			if(array_key_exists ("date-parts",$xmlobject["created"])){
+				$bibtex .= "year = {".$xmlobject["created"]["date-parts"][0][0]."},<br>";
+				//$bibtex .= "year = {"."2016"."},<br>";
+			}
+		}
+		if(array_key_exists ("volume",$xmlobject)){
+			$bibtex .= "volume = {".$xmlobject["volume"][0][0]."},<br>";
+		}
+
+		$bibtex .= "}</div></div>";
+		$paper->setBibtex($bibtex);
 	}
 
 }

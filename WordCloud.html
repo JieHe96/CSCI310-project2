@@ -124,6 +124,11 @@
 		document.querySelector("#exportDiv").style.visibility = "hidden";
 	}
 
+	function getBibtex(index){
+		var bibtex = papers[index].bibtex;
+		var w = window.open();
+    	$(w.document.body).html(bibtex);
+	}
 	function searchArticle(){
 		var searchinput = document.querySelector("#search_input").value;
 		var xinput = document.querySelector("#x_input").value;
@@ -310,6 +315,7 @@
 		row += "<th><div onclick='sortTable(1)'>Authors</div></th>"
 		row += "<th><div onclick='sortTable(2)'>Conference</div></th>"
 		row += "<th><div onclick='sortTable(3)'>Download</div></th>"
+		row += "<th>Bibtex</th> ";
 		row += "<th><div onclick='sortTable(4)'>Frequency</div></th>";
 		row += "<th><div>SubSearch</div></th></tr></thead>";
 		
@@ -326,9 +332,14 @@
 					//add an id to the div to enable highlighting the word in the abstract
 					//row += "<td><div style='width: 200px; color:grey;' onclick='displayAbstract(this)'>";
 					row += papers[i].title + "</div></td>";
-					row += "<td><div onclick='newSearch(this)'>" + papers[i].authors + "</div></td>";
+					row += "<td>";
+					for(var k=0; k<papers[i].authors.length; k++){
+						row += "<div onclick='newSearch(this)'>" + papers[i].authors[k] + "</div>";
+					}
+					row += "</td>";
 					row += "<td>"+ "testing" +"</td>";
 					row += "<td><a href='#' onclick='downloadURI(this)'>" + papers[i].downloadlink + "</td>";
+					row += "<td><div onclick='getBibtex("+i+")'>Bibtex</div></td>";
 					row += "<td>" + title_freq_list[j].freq + "</td>";
 					row += "<td><input type='checkbox' id='" + papers[i].title + "'></td>";
 					row += "</tr>";

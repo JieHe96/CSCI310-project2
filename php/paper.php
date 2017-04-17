@@ -67,6 +67,15 @@ class Paper{
 	function setConference($conf){
 		$this->conference = $conf;
 	}
-	
+	/**
+     * @codeCoverageIgnore
+     */	
+	function setBibtex($bibtex){
+		$this->bibtex = $bibtex;
+	}
+	function getBibtex($bibtex){
+		return $this->bibtex;
+	}
+
 }
 ?>
