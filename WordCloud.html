@@ -44,6 +44,7 @@
 
 <div id= "papersDiv"></div>
 <div id="exportDiv">
+	<button id="subSearch" onclick="subsetSearch()">SubSearch</button>
 	<button id="exportTablePDF">Export Table to PDF</button>
 	<button id="exportTableTXT">Export Table to txt</button>
 </div>
@@ -325,10 +326,11 @@
 					//add an id to the div to enable highlighting the word in the abstract
 					//row += "<td><div style='width: 200px; color:grey;' onclick='displayAbstract(this)'>";
 					row += papers[i].title + "</div></td>";
-					row += "<td><div onclick='newSearch(this)'>" +papers[i].authors + "</div></td>";
+					row += "<td><div onclick='newSearch(this)'>" + papers[i].authors + "</div></td>";
 					row += "<td>"+ "testing" +"</td>";
 					row += "<td><a href='#' onclick='downloadURI(this)'>" + papers[i].downloadlink + "</td>";
-					row += "<td>" + title_freq_list[j].freq + "</td>"
+					row += "<td>" + title_freq_list[j].freq + "</td>";
+					row += "<td><input type='checkbox' id='" + papers[i].title + "'></td>";
 					row += "</tr>";
 					table += row;
 					break;
@@ -487,6 +489,53 @@
         		alert('Please type in valid artist name.');
       		}
 		});
+	}
+
+	function subsetSearch() {
+		// console.log(word_title_list);
+		var sorted_list = [];
+		var new_word_title_list = [];
+		for(var i = 0; i < title_freq_list.length; i++) {
+			var title = title_freq_list[i].title;
+			if(document.getElementById(title).checked == true) {
+				for(var j = 0; j < word_title_list.length; j++) {
+					if(word_title_list[j][0].title == title) {
+						new_word_title_list.push(word_title_list[j]);
+						for(var x = 0; x < word_title_list[j].length; x++) {
+							sorted_list.push([word_title_list[j][x].text, word_title_list[j][x].freq]);
+						}
+					}
+				}
+			}
+		}
+
+		word_title_list = new_word_title_list;
+		console.log(word_title_list);
+
+		sorted_list.sort(function(a, b) {
+		    return b[1] - a[1];
+		});
+
+		var top_freq = 0;
+
+		if(sorted_list.length != 0) {
+			top_freq = sorted_list[0][1];
+		}
+
+		var size = sorted_list.length;
+		if(size > 250) {size = 250;}
+
+		frequency_list = [];
+
+		for(var i = 0; i < size; i++) {
+			var ratio = sorted_list[i][1] / top_freq;
+			var elem_size = ratio * 120 + 30;
+			var obj = {text : sorted_list[i][0], size : elem_size};
+			//console.log(obj);
+			frequency_list.push(obj);
+		}
+		document.querySelector("#wordcloudDiv").style.display = "block"
+		showCloud();
 	}
 
 	function downloadimage() { //image
