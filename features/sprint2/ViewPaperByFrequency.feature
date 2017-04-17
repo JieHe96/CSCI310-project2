@@ -8,4 +8,4 @@ Given I am on "/WordCloud.html"
 	And I press "searchbutton"
 	And I wait for 30 seconds
 And I click on "with"
-And "Methodological Triangulation Using Neural Networks for Business Research" should precede "Ablative Therapies for Colorectal Polyps and Malignancy"
+And "Methodological Triangulation Using Neural Networks for Business Research" should precede "Ablative Therapies for Colorectal Polyps and Malignancy" in the 1 column of table

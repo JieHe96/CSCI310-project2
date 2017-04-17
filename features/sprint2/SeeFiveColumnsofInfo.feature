@@ -5,10 +5,12 @@ Scenario: (Req ID: 4) User can see five columns including title, author list,
 					conference, download link, and word frequency
 
 Given I am on "/WordCloud.html"
-When I fill in "search_input" with "wang"
-And I fill in "x_input" with "5"
+When I fill in "search_input" with "steven"
 And I press "searchbutton"
-And I wait for 10 seconds
-Then I should see "bunch"
-When I click on "bunch"
-Then I should see 5 columns
+And I wait for 30 seconds
+And I click on "with"
+Then I should see "Title" in the headers of table
+And I should see "Authors" in the headers of table
+And I should see "Conference" in the headers of table
+And I should see "Download" in the headers of table
+And I should see "Frequency" in the headers of table
