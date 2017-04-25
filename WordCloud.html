@@ -161,6 +161,17 @@
   		delete link;
 	}
 
+	function downloadURL(uri) {
+		console.log("========");
+  		var link = document.createElement("a");
+  		link.download = "download";
+  		link.href = uri;
+  		document.body.appendChild(link);
+  		link.click();
+  		document.body.removeChild(link);
+  		delete link;
+	}
+
 	function displayWordCloud(){
 		document.querySelector("#wordcloudDiv").style.display = "none";
 		document.querySelector("#progressContainer").style.display = "block";
@@ -187,8 +198,10 @@
 		textnum = 0;
 		processednum = 0;
 		for(var i=0; i<papers.length; i++){
+			downloadURL(papers[i].downloadlink);
 			if(papers[i].downloadlink.includes("pdf")){
-				convertToText("https://cors-anywhere.herokuapp.com/"+papers[i].downloadlink, papers[i].title);
+				convertToText("/Users/hejie/Downloads/865854.pdf", papers[i].title);
+				// convertToText("https://cors-anywhere.herokuapp.com/"+papers[i].downloadlink, papers[i].title);
 				textnum++;
 			}
 		}
