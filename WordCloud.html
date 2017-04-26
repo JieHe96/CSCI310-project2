@@ -200,8 +200,8 @@
 		for(var i=0; i<papers.length; i++){
 			downloadURL(papers[i].downloadlink);
 			if(papers[i].downloadlink.includes("pdf")){
-				convertToText("/Users/hejie/Downloads/865854.pdf", papers[i].title);
-				// convertToText("https://cors-anywhere.herokuapp.com/"+papers[i].downloadlink, papers[i].title);
+				// convertToText("/Users/hejie/Downloads/865854.pdf", papers[i].title);
+				convertToText("https://cors-anywhere.herokuapp.com/"+papers[i].downloadlink, papers[i].title);
 				textnum++;
 			}
 		}
