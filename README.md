@@ -13,8 +13,11 @@ phpunit --coverage-text=./report/whitecoverage.txt --log-junit report/whiteresul
 
 Black-box Testing 
 ---------------------------------------------------------------------- 
-1.	Open terminal, change directory to: Desktop/project2  
-2.	Run command line  
-php bin/behat --out report/blackresult.out --tags '@sprint2'
-3.	The test result is generated as ./report/blackresult.out 
+1.  Open terminal, change directory to: Desktop/project2
+2.  Run the command  
+java -jar -Dwebdriver.river=”/Downloads/chromedriver” selenium-server-standalone-3.2.0.jar
+3.	Open another terminal, change directory to: Desktop/project2
+4.	Run command line  
+php bin/behat --out report/blackresult.out --tags '@sprint3'
+5.	The test result is generated as ./report/blackresult.out 
   
