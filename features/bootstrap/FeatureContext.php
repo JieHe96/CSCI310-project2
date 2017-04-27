@@ -56,7 +56,7 @@ class FeatureContext extends MinkContext
     /**
      * @Given /^I click on "([^"]*)" in the "([^"]*)" element$/
      */
-    public function iClickOnInTheElement($arg1)
+    public function iClickOnInTheElement($arg1,$arg2)
     {
         $session = $this->getSession();
         $element = $session->getPage()->find('xpath',
@@ -180,7 +180,48 @@ class FeatureContext extends MinkContext
         $element->mouseOver();
     }
 
+        /**
+     * @Then /^I can move the mouse over "([^"]*)" element to see "([^"]*)"$/
+     */
+    public function iCanMoveTheMouseOverElementToSee($arg1, $arg2)
+    {
+        $session = $this->getSession(); // get the mink session
+        $element = $session->getPage()->find('css', $arg1); // runs the actual query and returns the element
+        if (null === $element) {
+            throw new \InvalidArgumentException(sprintf('Could not evaluate CSS selector: "%s"', $arg1));
+        }
+        $element->mouseOver();
+        $e = $element->getHtml();
+        if (strpos($e, $arg2) === false) {
+            throw new \InvalidArgumentException(sprintf('Could not find the term '. $arg2));
+        }
+        // $e->click();
+    }
 
+
+    //     /**
+    //  * @Then /^I can move the mouse over "([^"]*)" element to see "([^"]*)"$/
+    //  */
+    // public function iCanMoveTheMouseOverElementToSee($arg1, $arg2)
+    // {
+    //     $page = $this->getSession()->getPage();      
+    
+    //     $actual_rows = $page->findAll('css', 'div.'.$arg1.' a');
+    //     if ($actual_rows === null) {
+    //          throw new \InvalidArgumentException(sprintf('Could not find'. $arg1));
+    //     }
+    //     $actual_Values = array();
+    //     foreach($actual_rows as $row) {
+    //         if ($row->getText() === null)  {
+    //           throw new \InvalidArgumentException(sprintf('Could not find'. $arg2));  
+    //         } 
+    //         else {     
+    //             echo $row ;
+    //         }
+    //     }
+       
+        
+    // }
 
     /**
      * @Then /^I can see "([^"]*)" in the "([^"]*)" element$/
