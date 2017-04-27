@@ -50,6 +50,10 @@ class Alltest extends TestCase
      * @covers APIcommunicator::searchByAuthor
      * @covers APIcommunicator::crossrefACMgenerate
      * @covers APIcommunicator::execSearchTerm
+     * @covers APIcommunicator::getAbstract
+     * @covers APIcommunicator::generateBibtex
+     * @covers APIcommunicator::AnalyzeLink
+     * @covers APIcommunicator::getSubstring
      */	
 	public function testAPIcommunicatorSearch() {
 		$com = new APIcommunicator();

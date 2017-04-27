@@ -10,18 +10,6 @@ class APIcommunicator{
 		$this->papers = [];
 		$this->acmurl = "http://dl.acm.org/";
 	}
-	/**
-     * @codeCoverageIgnore
-     */	
-	function searchByKeywords($searchinput,$xinput,$isTest){
-		/* arxiv API */
-		$searchURL = "http://export.arxiv.org/api/query?search_query=all:".$searchinput."&start=0&max_results=".$xinput;
-		$result = $this->execSearchTerm($searchURL);
-		$result = simplexml_load_string($result)->entry;
-		$this->generatePapers($result);
-		echo json_encode($this->papers);	
-		
-	}
 	function searchByAuthor($searchinput,$xinput,$isTest){
 		for($i=0; $i<5; $i++){
 			$searchinput = str_replace(" ","+",$searchinput);
@@ -49,12 +37,9 @@ class APIcommunicator{
 	
 	function execSearchTerm($searchTerm) {
 		$ch = curl_init();
-		//curl_setopt($ch, CURLOPT_PROXY, "http://fr.proxymesh.com"); //your proxy url
-    	//curl_setopt($ch, CURLOPT_PROXYPORT, "31280"); 
 		curl_setopt($ch, CURLOPT_URL, $searchTerm);
     	curl_setopt($ch, CURLOPT_HEADER, 0);
     	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    	//curl_setopt($ch, CURLOPT_PROXYUSERPWD, "sidneychen:123321"); //username:pass 
 		$searchresult = curl_exec($ch);
 		curl_close($ch);
 		return $searchresult;
@@ -82,12 +67,6 @@ class APIcommunicator{
 			for($j=0; $j<sizeof($xmlobject[$i]["author"]);$j++){
 				$wholename = $xmlobject[$i]["author"][$j];
 				$paper->setAuthors($wholename["given"]." ".$wholename["family"]);
-			}
-			
-			if(array_key_exists ("event",$xmlobject[$i])){
-				$paper->setConference($xmlobject[$i]["event"]["name"]);
-			}else{
-				$paper->setConference("NULL");
 			}
 			if(array_key_exists ("DOI",$xmlobject[$i])){
 				
@@ -120,17 +99,12 @@ class APIcommunicator{
 			}else{
 				$paper->setDOI("");
 			}	
-			if(array_key_exists ("abstract",$xmlobject[$i])){
-				$paper->setAbstract($xmlobject[$i]["abstract"]);
-			}else{
-				$this->getAbstract($paper);
-			}
-			
+			$this->getAbstract($paper);
 			$this->generateBibtex($paper);
-			//$paper->setDownloadLink($xmlobject[$i]["link"][0]["URL"]);
 			array_push($this->papers,$paper);
 		}
 	}
+
 	function getAbstract($paper){
 		$searchURL = $this->acmurl."tab_abstract.cfm?";
 		$searchURL .= "id=".$paper->id;
@@ -158,6 +132,7 @@ class APIcommunicator{
 		$paper->setAbstract($text);
 
 	}
+
 	function AnalyzeLink($paper,$downloadlink){
 		$id = $this->getSubstring($downloadlink,"id=","&");
 		$paper->setId($id);
@@ -170,10 +145,12 @@ class APIcommunicator{
 		$paper->setCFtoken($cftoken);
 
 	}
+
 	function generateBibtex($paper){
 		$link = "http://dl.acm.org/exportformats.cfm?id=".$paper->id."&expformat=bibtex";
 		$paper->setBibtex($link);
 	}
+
 	function getSubstring($string, $start, $end){
     	$string = ' ' . $string;
     	$ini = strpos($string, $start);

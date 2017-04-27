@@ -100,6 +100,9 @@ class Paper{
 	function setCFtoken($cftoken){
 		$this->cftoken = $cftoken;
 	}
+	/**
+     * @codeCoverageIgnore
+     */	
 	function setCfid($cfid){
 		$this->cfid = $cfid;
 	}
