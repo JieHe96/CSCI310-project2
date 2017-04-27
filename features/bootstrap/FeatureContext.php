@@ -272,6 +272,32 @@ class FeatureContext extends MinkContext
         }
     }
 
+    /**
+     * @Then /^I should see a status bar$/
+     */
+    public function iShouldSeeAStatusBar()
+    {
+        $session = $this->getSession(); // get the mink session
+        $element = $session->getPage()->find('css', '#progressContainer'); // runs the actual query and returns the element
+        if (null === $element) {
+            throw new \InvalidArgumentException(sprintf('bar not found'));
+        }
+        if ($element->isVisible() === false) {
+             throw new \InvalidArgumentException(sprintf('it is invisible'));
+        }
+    }
+
+    /**
+     * @Given /^I check the first check box in the table$/
+     */
+    public function iCheckTheFirstCheckBoxInTheTable()
+    {
+        $id = "Methodological Triangulation Using Neural Networks for Business Research";
+        $session = $this->getSession();
+        $element = $session->getPage()->find('css', 'input[type="checkbox"]:checked#' . $id);
+        echo $element.getText();
+        
+    }
 
 
 
