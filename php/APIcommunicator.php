@@ -4,16 +4,17 @@ use PHPUnit\Framework\TestCase;
 include_once('paper.php');
 class APIcommunicator{
 	public $papers;
+	public $acmurl;
 
 	function __construct(){
 		$this->papers = [];
+		$this->acmurl = "http://dl.acm.org/";
 	}
 	/**
      * @codeCoverageIgnore
      */	
 	function searchByKeywords($searchinput,$xinput,$isTest){
 		/* arxiv API */
-		
 		$searchURL = "http://export.arxiv.org/api/query?search_query=all:".$searchinput."&start=0&max_results=".$xinput;
 		$result = $this->execSearchTerm($searchURL);
 		$result = simplexml_load_string($result)->entry;
@@ -24,8 +25,8 @@ class APIcommunicator{
 	function searchByAuthor($searchinput,$xinput,$isTest){
 		for($i=0; $i<5; $i++){
 			$searchinput = str_replace(" ","+",$searchinput);
-			$searchURL = "http://api.crossref.org/works?filter=has-full-text:true,has-abstract:true";
-			//$searchURL = "http://api.crossref.org/works?filter=member:320";
+			//$searchURL = "http://api.crossref.org/works?filter=has-full-text:true,has-abstract:true";
+			$searchURL = "http://api.crossref.org/works?filter=member:320";
 			$searchURL .= "&query.author=".$searchinput;
 			$searchURL .= "&rows=".$xinput;		
 			$result = $this->execSearchTerm($searchURL);
@@ -48,9 +49,12 @@ class APIcommunicator{
 	
 	function execSearchTerm($searchTerm) {
 		$ch = curl_init();
+		//curl_setopt($ch, CURLOPT_PROXY, "http://fr.proxymesh.com"); //your proxy url
+    	//curl_setopt($ch, CURLOPT_PROXYPORT, "31280"); 
 		curl_setopt($ch, CURLOPT_URL, $searchTerm);
     	curl_setopt($ch, CURLOPT_HEADER, 0);
     	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    	//curl_setopt($ch, CURLOPT_PROXYUSERPWD, "sidneychen:123321"); //username:pass 
 		$searchresult = curl_exec($ch);
 		curl_close($ch);
 		return $searchresult;
@@ -79,70 +83,104 @@ class APIcommunicator{
 				$wholename = $xmlobject[$i]["author"][$j];
 				$paper->setAuthors($wholename["given"]." ".$wholename["family"]);
 			}
-			if(array_key_exists ("abstract",$xmlobject[$i])){
-				$paper->setAbstract($xmlobject[$i]["abstract"]);
-			}else{
-				$paper->setAbstract("Not available for this paper");
-			}
-			/*
+			
 			if(array_key_exists ("event",$xmlobject[$i])){
-				$paper->setConference($xmlobject[$i]["event"]);
+				$paper->setConference($xmlobject[$i]["event"]["name"]);
 			}else{
 				$paper->setConference("NULL");
 			}
-			*/
-			/*
 			if(array_key_exists ("DOI",$xmlobject[$i])){
+				
 				$paper->setDOI($xmlobject[$i]["DOI"]);
 				$searchURL = "http://dx.doi.org/".$paper->getDOI();
-				$html = file_get_contents($searchURL);
+				/* rotating proxy, need to delete*/
+				$auth = base64_encode('sidneychen:123321');
+				$aContext = array(
+    				'http' => array(
+        				'proxy' => 'fr.proxymesh.com:31280',
+       					'request_fulluri' => true,
+       					'header' => "Proxy-Authorization: Basic $auth",
+   					),
+				);
+				$cxContext = stream_context_create($aContext);
+				$html = file_get_contents($searchURL,False, $cxContext);
+				/**/
+				//$html = file_get_contents($searchURL);
 				libxml_use_internal_errors(true);
 				$dom = new DOMDocument();
 				$dom->loadHTML($html);
 				$dom->saveHTML();
 				$links = $dom->getElementsByTagName('a');
 				foreach ($links as $link){
-					if($link->getAttribute('title')=='FullText PDF'){
-    					$paper->setDownloadLink($link->getAttribute('href'));
-					}
-		         	
+					if($link->getAttribute('title')=='FullText PDF'||$link->getAttribute('title')=='Get this Article'){
+    					$paper->setDownloadLink($this->acmurl.$link->getAttribute('href'));
+    					$this->AnalyzeLink($paper,$link->getAttribute('href'));
+					}	
 				}
 			}else{
 				$paper->setDOI("");
 			}	
-			*/
-			$this->generateBibtex($paper,$xmlobject[$i]);
-			$paper->setDownloadLink($xmlobject[$i]["link"][0]["URL"]);
+			if(array_key_exists ("abstract",$xmlobject[$i])){
+				$paper->setAbstract($xmlobject[$i]["abstract"]);
+			}else{
+				$this->getAbstract($paper);
+			}
+			
+			$this->generateBibtex($paper);
+			//$paper->setDownloadLink($xmlobject[$i]["link"][0]["URL"]);
 			array_push($this->papers,$paper);
 		}
 	}
-	function generateBibtex($paper,$xmlobject){
-		$bibtex = "<div style='font-size:5px;'>";
-		$bibtex .= "@article{<br><div style='padding-left:10px;'>";
-		$bibtex .= "author = {";
-		for($i=0; $i<sizeof($paper->authors);$i++){
-			$bibtex .= $paper->authors[$i].", ";
-		}
-		$bibtex .= " },<br>";
-		$bibtex .= "title = {".$paper->getTitle()."},<br>";
-		if(array_key_exists ("DOI",$xmlobject)){
-			$bibtex .= "doi = {".$xmlobject["DOI"]."},<br>";
-		}
-		if(array_key_exists ("ISSN",$xmlobject)){
-			$bibtex .= "issn = {".$xmlobject["ISSN"][0]."},<br>";
-		}
-		if(array_key_exists ("created",$xmlobject)){
-			if(array_key_exists ("date-parts",$xmlobject["created"])){
-				$bibtex .= "year = {".$xmlobject["created"]["date-parts"][0][0]."},<br>";
-				//$bibtex .= "year = {"."2016"."},<br>";
-			}
-		}
-		if(array_key_exists ("volume",$xmlobject)){
-			$bibtex .= "volume = {".$xmlobject["volume"][0][0]."},<br>";
-		}
+	function getAbstract($paper){
+		$searchURL = $this->acmurl."tab_abstract.cfm?";
+		$searchURL .= "id=".$paper->id;
+		$searchURL .= "&type=Article&usebody=tabbody&";
+		$searchURL .= "cfid=".$paper->cfid;
+		$searchURL .= "&cftoken=".$paper->cftoken;
+		$auth = base64_encode('sidneychen:123321');
+		$aContext = array(
+    		'http' => array(
+       			'proxy' => 'fr.proxymesh.com:31280',
+				'request_fulluri' => true,
+       			'header' => "Proxy-Authorization: Basic $auth",
+   			),
+   		);
+		$cxContext = stream_context_create($aContext);
+		$html = file_get_contents($searchURL,False, $cxContext);
+		ob_start();
+		var_dump($html);
+		$text = ob_get_clean();
+		$text = $this->getSubstring($text,">","</div>");
+		$text .= "</div>";
+		$text = $this->getSubstring($text,">","</div>");
+		str_replace("<p>"," ", $text);
+		str_replace("</p>"," ", $text);
+		$paper->setAbstract($text);
 
-		$bibtex .= "}</div></div>";
-		$paper->setBibtex($bibtex);
+	}
+	function AnalyzeLink($paper,$downloadlink){
+		$id = $this->getSubstring($downloadlink,"id=","&");
+		$paper->setId($id);
+		$ftid = $this->getSubstring($downloadlink,"ftid=","&");
+		$paper->setFtid($ftid);
+		$cfid = $this->getSubstring($downloadlink,"CFID=","&");
+		$paper->setFtid($cfid);
+		$templink = $downloadlink."***";
+		$cftoken = $this->getSubstring($templink,"CFTOKEN=","***");
+		$paper->setCFtoken($cftoken);
+
+	}
+	function generateBibtex($paper){
+		$link = "http://dl.acm.org/exportformats.cfm?id=".$paper->id."&expformat=bibtex";
+		$paper->setBibtex($link);
+	}
+	function getSubstring($string, $start, $end){
+    	$string = ' ' . $string;
+    	$ini = strpos($string, $start);
+    	if ($ini == 0) return '';
+    	$ini += strlen($start);
+    	$len = strpos($string, $end, $ini) - $ini;
+    	return substr($string, $ini, $len);
 	}
 
 }
