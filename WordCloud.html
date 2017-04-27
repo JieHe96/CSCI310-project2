@@ -12,6 +12,8 @@
 	<script type="text/javascript" src="tableExport/jspdf/libs/sprintf.js"></script>
 	<script type="text/javascript" src="tableExport/jspdf/jspdf.js"></script>
 	<script type="text/javascript" src="tableExport/jspdf/libs/base64.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.debug.js"></script>
+
 </head>
 <body>
 <div id = "outercontainer">
@@ -51,6 +53,7 @@
 <div id= "abstractDiv">
 <div style="font-size: 20px;">Abstract</div>
 <div id= "abstractContent"></div>
+<button id = "downloadabstract" onclick="exportabstract();">export abstract</button>
 <button id = "backbutton" onclick="backToPapers();">Back</button>
 </div>
 
@@ -74,7 +77,6 @@
 	var fill = d3.scale.category20();
   	//generate the cloud to the website
   	function showCloud() {
-	    // frequency_list = [];
 	    d3.layout.cloud().size([800, 500])
 	      .words(frequency_list)
 	      .padding(1)
@@ -84,8 +86,6 @@
 	      .fontSize(function(d) { return d.size; })
 	      .on("end", draw)
 	      .start();
-	    //  document.getElementById("searchDiv").innerHTML +=
-	      //	'<button id="button_downloadimage" onclick="downloadimage()">Download the Cloud</button>';
   		document.getElementById("button_downloadimage").disabled = false;
   	}
 
@@ -119,20 +119,20 @@
 
 	function init(){
 		document.querySelector("#papersDiv").style.visibility = "hidden";
-		document.querySelector("#x_input").value = 10;
+		document.querySelector("#x_input").value = 3;
 		document.querySelector("#abstractDiv").style.display = "none";
 		document.querySelector("#exportDiv").style.visibility = "hidden";
 	}
 
-	function getBibtex(index){
-		var bibtex = papers[index].bibtex;
-		var w = window.open();
-    	$(w.document.body).html(bibtex);
-	}
+
 	function searchArticle(){
 		var searchinput = document.querySelector("#search_input").value;
 		var xinput = document.querySelector("#x_input").value;
 		document.querySelector(".dropdown-content").innerHTML += '<a onclick="newSearch(this)">' + searchinput + '</a>';
+		document.querySelector("#wordcloudDiv").style.display = "none";
+		document.querySelector("#progressContainer").style.display = "block";
+		document.querySelector("#wordcloudDiv").style.display = "block";
+
 		$.ajax({
       		url: 'php/articlesearch.php',
     		type: 'POST',
@@ -140,9 +140,17 @@
       		success : function(data) {
         		if(data=="error"){alert("Erro occurred"); console.log("error");}
         		else{
-         			papers = eval(data);
+        			try {
+         				papers = eval(data);
+					} catch (e) {
+    					if (e instanceof SyntaxError) {
+        					alert("network error occured during API call");
+        					return;
+    					}
+					}
+         			//papers = eval(data);
          			displayWordCloud();
-         			//console.log(data);
+         			console.log(papers);
         		} 
       		},
       		error : function() {
@@ -160,9 +168,7 @@
   		document.body.removeChild(link);
   		delete link;
 	}
-
 	function downloadURL(uri) {
-		console.log("========");
   		var link = document.createElement("a");
   		link.download = "download";
   		link.href = uri;
@@ -171,50 +177,30 @@
   		document.body.removeChild(link);
   		delete link;
 	}
-
 	function displayWordCloud(){
-		document.querySelector("#wordcloudDiv").style.display = "none";
-		document.querySelector("#progressContainer").style.display = "block";
-		// d3.select("svg").remove()
-		// alltext = ' ';
- 	// 	var table = "<table id = 'papertable'>";
-		// var row = "<tr bgcolor='lightblue'><th style='width:100px;'>Title (click to see Abstract)</th>";
-		// row += "<th>Authors</th><th>Download</th></tr>";
-		// table += row;
-		// for(var i=0; i<papers.length; i++){
-		// 	row = "<tr bgcolor='lightyellow'>"
-		// 	row += "<td><div style='width: 200px; color:grey;' onclick='displayAbstract(this)'>";
-		// 	row += papers[i].title + "</div></td>";
-		// 	row += "<td>" + papers[i].authors + "</td>";
-		// 	row += "<td><a href='#' onclick='downloadURI(this)'>" + papers[i].downloadlink + "</td>";
-		// 	row += "<tr>";
-		// 	table += row;
 
-		// }
-		// table += "</table>";
-		// document.querySelector("#papersDiv").innerHTML = table;
-		// document.querySelector("#papersDiv").style.visibility = "visible";
 		frequency_list = [];
-		textnum = 0;
+		textnum = papers.length;
 		processednum = 0;
 		for(var i=0; i<papers.length; i++){
+			/*
 			downloadURL(papers[i].downloadlink);
 			if(papers[i].downloadlink.includes("pdf")){
-				// convertToText("/Users/hejie/Downloads/865854.pdf", papers[i].title);
-				convertToText("https://cors-anywhere.herokuapp.com/"+papers[i].downloadlink, papers[i].title);
+				convertToText("file:///Users/Sidney/Downloads/175783.pdf", papers[i].title);
+				// convertToText("https://cors-anywhere.herokuapp.com/"+papers[i].downloadlink, papers[i].title);
 				textnum++;
 			}
+			*/
+			parseText(papers[i].abstract,papers[i].title);
 		}
 		document.querySelector("#wordcloudDiv").style.display = "block";
 	}
 
 	function displayAbstract(tablecell,selectedword){ 
-//	function displayAbstract(tablecell){
 		var clicktitle = tablecell.innerHTML;
 		for(var i=0; i<papers.length; i++){
 			if(papers[i].title == clicktitle){
 				document.querySelector("#papersDiv").style.display = "none";
-				//document.querySelector("#abstractContent").innerHTML = papers[i].abstract;
 				var paper_abstract = papers[i].abstract;	// highlighting the selected word
 				paper_abstract = paper_abstract.replace(new RegExp(" "+selectedword+" ", 'gi'), 
 								'<span class="highlight">'+" "+selectedword+" "+'</span>');
@@ -233,11 +219,16 @@
 	function isLetter(s){
   		return s.match("^[a-zA-Z\(\)]+$");    
 	}
+
 	function parseText(text_list, title) {
 		var text_str = '';
+		/*/
 		for(var i = 0; i < text_list.length; i++) {
 			text_str = text_str.concat(text_list[i]);
 		}
+		/**/
+		text_str = text_str.concat(text_list);
+
 		var text_arr = text_str.split(" ");
 		var parsed_arr = [];
 		for(var i = 0; i < text_arr.length; i++) {
@@ -304,8 +295,8 @@
 		if(textnum==processednum){
 			showCloud();
 			document.querySelector("#progressContainer").style.display = "none";
-
 		}
+
 	}
 
 	function displayPapers(word) {
@@ -313,14 +304,10 @@
 		for(var i = 0; i < word_title_list.length; i++) {
 			for(var j = 0; j < word_title_list[i].length; j++) {
 				if(word_title_list[i][j].text == word) {
-					// console.log(word_title_list[i][j].title);
 					title_freq_list.push({title: word_title_list[i][j].title, freq: word_title_list[i][j].freq});
 				}
 			}
 		}
-
-		// console.log(title_freq_list);
-
 		alltext = ' ';
  		var table = "<table id = 'papertable'>";
 		var row = "<thead><tr bgcolor='lightblue'>";
@@ -350,9 +337,9 @@
 						row += "<div onclick='newSearch(this)'>" + papers[i].authors[k] + "</div>";
 					}
 					row += "</td>";
-					row += "<td>"+ "testing" +"</td>";
+					row += "<td>"+ papers[i].conference +"</td>";
 					row += "<td><a href='#' onclick='downloadURI(this)'>" + papers[i].downloadlink + "</td>";
-					row += "<td><div onclick='getBibtex("+i+")'>Bibtex</div></td>";
+					row += "<td><a href='"+papers[i].bibtex+"'>Bibtex</a></td>";
 					row += "<td>" + title_freq_list[j].freq + "</td>";
 					row += "<td><input type='checkbox' id='" + papers[i].title + "'></td>";
 					row += "</tr>";
@@ -366,7 +353,6 @@
 		table += "</table>";
 		document.querySelector("#papersDiv").innerHTML = table;
 		document.querySelector("#papersDiv").style.visibility = "visible";
-		// document.querySelector("#papersDiv").innerHTML += "<button id='exportTable' onclick='$('#papertable').tableExport({type:'pdf',escape:'false'})'>Export Table</button>";
 		sortTable(5);
 		document.querySelector("#exportDiv").style.visibility = "visible";
 		document.querySelector("#exportTablePDF").onclick = function() {
@@ -401,26 +387,6 @@
     		console.error(reason);
 		});
 	}
-
-	// function getBinaryData (url) {
-	//     // body...
-	//     var xhr = new XMLHttpRequest();
-
-	//     xhr.open('GET', url, true);
-	//     xhr.responseType = 'arraybuffer';
-	//     xhr.onload = function(e) {
-	//         //binary form of ajax response,
-	//         convertToText(e.currentTarget.response);
-	//     };
-
-	//     xhr.onerror = function  () {
-	//         // body...
-	//         alert("xhr error");
-	//     }
-
-	//     xhr.send();
-	// }
-
 	function getPageText(pageNum, PDFDocumentInstance) {
     // Return a Promise that is solved once the text of the page is retrieven
     	return new Promise(function (resolve, reject) {
@@ -443,6 +409,7 @@
 	function moveprogress(){
 		var bar = document.querySelector("#progressBar");
 		bar.style.width = processednum/textnum*200 +"px";
+
 	}
 
 	function sortTable(j) {
@@ -493,6 +460,10 @@
 		document.querySelector("#wordcloudDiv").style.display = "none";
 		document.querySelector("#papersDiv").style.visibility = "hidden";
 		document.querySelector("#exportDiv").style.visibility = "hidden";
+		document.querySelector("#wordcloudDiv").style.display = "none";
+		document.querySelector("#progressContainer").style.display = "block";
+		document.querySelector("#wordcloudDiv").style.display = "block";
+
 		var searchinput = i.innerHTML;
 		document.querySelector("#search_input").value = searchinput;
 		var xinput = document.querySelector("#x_input").value;
@@ -514,9 +485,24 @@
       		}
 		});
 	}
+	function exportabstract(){
+		var abstract = document.querySelector("#abstractContent").textContent;
+		var doc = new jsPDF();
+		doc.setFontSize(12);
+		var index1=0;
+		var index2=abstract.length;
+		var line = 20;
+
+		while(index1<index2){
+		 	var substring = abstract.substring(index1, Math.min(index1+70,index2));
+			doc.text(substring, 20, line);
+			index1 += 70;
+			line += 10;
+		}
+		doc.save('a4.pdf')
+	}
 
 	function subsetSearch() {
-		// console.log(word_title_list);
 		var sorted_list = [];
 		var new_word_title_list = [];
 		for(var i = 0; i < title_freq_list.length; i++) {
@@ -532,7 +518,6 @@
 				}
 			}
 		}
-
 		word_title_list = new_word_title_list;
 		console.log(word_title_list);
 
@@ -555,14 +540,13 @@
 			var ratio = sorted_list[i][1] / top_freq;
 			var elem_size = ratio * 120 + 30;
 			var obj = {text : sorted_list[i][0], size : elem_size};
-			//console.log(obj);
 			frequency_list.push(obj);
 		}
 		document.querySelector("#wordcloudDiv").style.display = "block"
 		showCloud();
 	}
 
-	function downloadimage() { //image
+	function downloadimage() { 
 		domtoimage.toJpeg(document.getElementById('wordcloudDiv'), { quality: 0.95 })
 		    .then(function (dataUrl) {
 		        var link = document.createElement('a');

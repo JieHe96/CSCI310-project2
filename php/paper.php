@@ -9,6 +9,10 @@ class Paper{
 	public $doi;
 	public $conference;
 	public $bibex;
+	public $id;
+	public $ftid;
+	public $cftoken;
+	public $cfid;
 	function __construct(){
 
 	}
@@ -27,7 +31,6 @@ class Paper{
 		return $this->authors;
 	}
 	function setDownloadLink($link){
-		//$this->downloadlink = "http://dl.acm.org/".$link;
 		$this->downloadlink = $link;
 	}
 	/**
@@ -73,8 +76,32 @@ class Paper{
 	function setBibtex($bibtex){
 		$this->bibtex = $bibtex;
 	}
+	/**
+     * @codeCoverageIgnore
+     */
 	function getBibtex($bibtex){
 		return $this->bibtex;
+	}
+	/**
+     * @codeCoverageIgnore
+     */
+	function setId($id){
+		$this->id = $id;
+	}
+	/**
+     * @codeCoverageIgnore
+     */
+	function setFtid($ftid){
+		$this->ftid = $ftid;
+	}
+	/**
+     * @codeCoverageIgnore
+     */
+	function setCFtoken($cftoken){
+		$this->cftoken = $cftoken;
+	}
+	function setCfid($cfid){
+		$this->cfid = $cfid;
 	}
 
 }
