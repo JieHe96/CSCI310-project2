@@ -287,17 +287,6 @@ class FeatureContext extends MinkContext
         }
     }
 
-    /**
-     * @Given /^I check the first check box in the table$/
-     */
-    public function iCheckTheFirstCheckBoxInTheTable()
-    {
-        $id = "Methodological Triangulation Using Neural Networks for Business Research";
-        $session = $this->getSession();
-        $element = $session->getPage()->find('css', 'input[type="checkbox"]:checked#' . $id);
-        echo $element.getText();
-        
-    }
 
 
 
