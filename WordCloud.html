@@ -197,9 +197,9 @@
 				parseText(papers[i].abstract,papers[i].title);
 			}
 			else{
-				if(papers[i].downloadlink.includes("pdf")){							
-					downloadURL(papers[i]);
-				}
+		//		if(papers[i].downloadlink.includes("pdf")){							
+					downloadURL(papers[i].downloadlink2);
+		//		}
 			}
 		}
 
@@ -210,12 +210,12 @@
 	}
 	function converttexts(){
 		for(var i=0; i<papers.length; i++){
-			if(papers[i].downloadlink.includes("pdf")){
+	//		if(papers[i].downloadlink.includes("pdf")){
 				var templink = papers[i].downloadlink;
 				var tempname = templink.substring(templink.lastIndexOf("/")+1,templink.lastIndexOf(".pdf"));
 				convertToText("downloads/"+tempname+".pdf", papers[i].title);
 				textnum++;
-			}
+	//		}
 		}
 	}
 
@@ -376,7 +376,7 @@
 					row += "<td><a href='#' onclick='downloadURI(this)'>" + papers[i].downloadlink + "</td>";
 					row += "<td><a href='"+papers[i].bibtex+"'>Bibtex</a></td>";
 					if(parseabstract){
-						row += "<td>" + parseInt(title_freq_list[j].freq*2.5) + "</td>";
+						row += "<td>" + parseInt(title_freq_list[j].freq*7) + "</td>";
 					}else{
 						row += "<td>" + title_freq_list[j].freq + "</td>";
 					}

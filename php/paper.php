@@ -13,6 +13,8 @@ class Paper{
 	public $ftid;
 	public $cftoken;
 	public $cfid;
+	public $conferencelink;
+	public $downloadlink2;
 	function __construct(){
 
 	}
@@ -105,6 +107,10 @@ class Paper{
      */	
 	function setCfid($cfid){
 		$this->cfid = $cfid;
+	}
+	function setconferencelink($conferencelink){
+		$this->conferencelink = $conferencelink;
+
 	}
 
 }

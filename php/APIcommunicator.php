@@ -112,11 +112,29 @@ class APIcommunicator{
 				}
 			}else{
 				$paper->setDOI("");
-			}	
+			}
+			if(!$this->parseabstract){
+				$url=$paper->downloadlink;
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, $url);
+				curl_setopt($ch, CURLOPT_HEADER, true);
+				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // Must be set to true so that PHP follows any "Location:" header
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+				$a = curl_exec($ch); // $a will contain all headers
+				$url = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL); // This is what you need, it will return you the last effective URL
+				$paper->downloadlink2 = $url;
+			}
+			$this->getConferenceLink($paper);
 			$this->getAbstract($paper);
 			$this->generateBibtex($paper);
 			array_push($this->papers,$paper);
 		}
+	}
+	function getConferenceLink($paper){
+		$conferencelink = "http://dl.acm.org/tab_source.cfm??id=".$paper->id;
+		$conferencelink .= "usebody=tabbody&type=article&sellOnline=1&purchaseable=yes&";
+		$conferencelink .= "cfid=".$paper->cfid."&cftoken=".$paper->cftoken;
+		$paper->setconferencelink($conferencelink);
 	}
 
 	function getAbstract($paper){
@@ -153,7 +171,7 @@ class APIcommunicator{
 		$ftid = $this->getSubstring($downloadlink,"ftid=","&");
 		$paper->setFtid($ftid);
 		$cfid = $this->getSubstring($downloadlink,"CFID=","&");
-		$paper->setFtid($cfid);
+		$paper->setCFid($cfid);
 		$templink = $downloadlink."***";
 		$cftoken = $this->getSubstring($templink,"CFTOKEN=","***");
 		$paper->setCFtoken($cftoken);
