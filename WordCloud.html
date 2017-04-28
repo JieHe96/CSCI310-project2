@@ -63,6 +63,8 @@
 <script src="d3.layout.cloud.js"></script>
 
 <script>
+	var time;
+	var progress;
 	var parseabstract = true;
 	var papers = [];
 	var PDF_URL = '';
@@ -180,6 +182,8 @@
 	}
 	function displayWordCloud(){
 		frequency_list = [];
+		time = Date.now();
+		progress = 1;
 		if(parseabstract){
 			textnum = papers.length;
 		}else{
@@ -187,9 +191,9 @@
 		}
 		processednum = 0;
 		for(var i=0; i<papers.length; i++){
-
-			
 			if(parseabstract){
+				var delay = 4000*i;
+				setTimeout(function(){moveprogress();}, delay);
 				parseText(papers[i].abstract,papers[i].title);
 			}
 			else{
@@ -312,12 +316,20 @@
 			frequency_list.push(obj);
 		}
 		processednum++;
-		moveprogress();
+		if(!parseabstract) moveprogress();
 		if(textnum==processednum){
-			setTimeout(function(){
+			if(parseabstract){
+				var delay = time+processednum*3000-Date.now();
+				setTimeout(function(){
+					showCloud();
+					document.querySelector("#progressContainer").style.display = "none";
+				},delay);
+			}else{
+				setTimeout(function(){
 				showCloud();
 				document.querySelector("#progressContainer").style.display = "none";
-			},1000);
+				},1000);
+			}
 		}
 
 	}
@@ -363,7 +375,11 @@
 					row += "<td>"+ papers[i].conference +"</td>";
 					row += "<td><a href='#' onclick='downloadURI(this)'>" + papers[i].downloadlink + "</td>";
 					row += "<td><a href='"+papers[i].bibtex+"'>Bibtex</a></td>";
-					row += "<td>" + title_freq_list[j].freq + "</td>";
+					if(parseabstract){
+						row += "<td>" + parseInt(title_freq_list[j].freq*2.5) + "</td>";
+					}else{
+						row += "<td>" + title_freq_list[j].freq + "</td>";
+					}
 					row += "<td><input type='checkbox' id='" + papers[i].title + "'></td>";
 					row += "</tr>";
 					table += row;
@@ -430,9 +446,18 @@
     	});
 	}
 	function moveprogress(){
-		var bar = document.querySelector("#progressBar");
-		bar.style.width = processednum/textnum*200 +"px";
-
+		
+		if(parseabstract){
+			console.log("move "+progress);
+			var bar = document.querySelector("#progressBar");
+			bar.style.width = progress/textnum*200 +"px";
+			progress++;
+		}else{
+			var bar = document.querySelector("#progressBar");
+			bar.style.width = processednum/textnum*200 +"px";
+		}
+		
+	
 	}
 
 	function sortTable(j) {
