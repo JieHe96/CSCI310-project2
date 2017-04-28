@@ -5,7 +5,7 @@ include_once('paper.php');
 class APIcommunicator{
 	public $papers;
 	public $acmurl;
-	public $parseabstract = true;
+	public $parseabstract = false;
 	function __construct(){
 		$this->papers = [];
 		$this->acmurl = "http://dl.acm.org/";

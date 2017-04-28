@@ -65,7 +65,7 @@
 <script>
 	var time;
 	var progress;
-	var parseabstract = true;
+	var parseabstract = false;
 	var papers = [];
 	var PDF_URL = '';
 	var plainText_list;
@@ -211,7 +211,7 @@
 	function converttexts(){
 		for(var i=0; i<papers.length; i++){
 	//		if(papers[i].downloadlink.includes("pdf")){
-				var templink = papers[i].downloadlink;
+				var templink = papers[i].downloadlink2;
 				var tempname = templink.substring(templink.lastIndexOf("/")+1,templink.lastIndexOf(".pdf"));
 				convertToText("downloads/"+tempname+".pdf", papers[i].title);
 				textnum++;
@@ -261,17 +261,18 @@
 			if(ele.slice(-1) == "." || ele.slice(-1) == "," || ele.slice(-1) == "?" || ele.slice(-1) == ")") {
 				ele = ele.substring(0, ele.length - 1);
 			}
-			ele = ele.toLowerCase();
+			ele = ele.toLowerCase().trim();
 			if(isLetter(ele) && ele != "" && ele != " " && ele != "a" && ele != "b" && ele != "c" && ele != "d" && ele != "e" &&
 				ele != "f" && ele != "g" && ele != "h" && ele != "i" && ele != "j" && ele != "k" && ele != "l" &&
 				ele != "m" && ele != "n" && ele != "o" && ele != "p" && ele != "q" && ele != "r" && ele != "s" &&
 				ele != "t" && ele != "u" && ele != "v" && ele != "w" && ele != "x" && ele != "y" && ele != "z" &&
 				ele != "is" && ele != "the" && ele != "of" && ele != "that" && ele != "are" && ele != "be" && ele != "was" &&
 				ele != "and" && ele != "in" && ele != "it" && ele != "on" && ele != "to" && ele != "not" && ele != "for" &&
-				ele != "that" && ele != "+" && ele != "-" && ele != "*" && ele != "/" && ele != "&" && ele != "$" &&
-				ele != "^" && ele != "%" && ele != "#" && ele != ")" && ele != "(" && ele != "}" && ele != "{" 
+				ele != "that" && ele != "we" && ele != "with" && ele != "which" && ele != "he" && ele != "she" && ele != "or" &&
+				ele != "at" && ele != "this" && ele != "so" && ele != "if" && ele != "do" && ele != "go" && ele != "any" 
 				&& ele != "from" && ele != "by" && ele != "as" && ele != "1" && ele != "2" && ele != "3" && ele != "4"
-				&& ele != "5" && ele != "6" && ele != "7" && ele != "8" && ele != "9" && ele != "0") {
+				&& ele != "more" && ele != "all" && ele != "no" && ele != "will" && ele != "how" && ele != "our" && ele != "no"
+				&& ele != "would" && ele != "these" && ele != "my") {
 				parsed_arr.push(ele);
 			}
 		}
