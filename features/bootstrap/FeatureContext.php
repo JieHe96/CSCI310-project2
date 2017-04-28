@@ -347,6 +347,24 @@ class FeatureContext extends MinkContext
 
     }
 
+    /**
+     * @Then /^I should see the paper comes from ACM library in the table$/
+     */
+    public function iShouldSeeThePaperComesFromAcmLibraryInTheTable()
+    {
+        $session = $this->getMainContext()->getSession(); //get the page
+        $element = $session->getPage()->find('xpath',
+                $session->getSelectorsHandler()->selectorToXpath('xpath', '//table[@id="papertable"]/tbody/tr[1]/td[4]'));
+        if ($element === null) {
+                throw new Exception('not found the element');
+        }
+        $elementText = $element->getText();
+        if (strpos($elementText, 'acm') === false) {
+            throw new \InvalidArgumentException(sprintf('Could not find the term '. 'acm'));
+        }
+
+        
+    }
 
 
 
