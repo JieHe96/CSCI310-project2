@@ -11,4 +11,3 @@ And I wait for 25 seconds
 Then I click on "crowd"
 And I click on "Improving Crowd Innovation with Expert Facilitation"
 And I press "export abstract"
-Then I should download the abstract

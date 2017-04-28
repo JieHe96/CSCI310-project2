@@ -328,6 +328,27 @@ class FeatureContext extends MinkContext
         }
     }
 
+    /**
+     * @Given /^I should word "([^"]*)" highlighted in the abstract$/
+     */
+    public function iShouldWordHighlightedInTheAbstract($arg1)
+    {
+       
+        $session = $this->getSession(); // get the mink session
+        $element = $session->getPage()->find('css',  '#abstractContent'); // runs the actual query and returns the element
+        if (null === $element) {
+            throw new \InvalidArgumentException(sprintf('Could not find the div'));
+        }
+        $e = $element->getHtml();
+        $highlighted = '<span class="highlight"> '.$arg1. ' </span>';
+        if (strpos($e, $highlighted) === false) {
+            throw new \InvalidArgumentException(sprintf('Could not find the term '. $arg1));
+        }
+
+    }
+
+
+
 
 
 
