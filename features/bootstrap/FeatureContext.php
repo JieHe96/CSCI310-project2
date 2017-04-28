@@ -110,14 +110,6 @@ class FeatureContext extends MinkContext
     }
 
     /**
-     * @Then /^I should see (\d+) columns$/
-     */
-    public function iShouldSeeColumns($num)
-    {
-        $this->assertSession()->elementsCount('css', "th", intval($num));
-    }
-
-    /**
      * @When /^I click on "([^"]*)" in the headers of table$/
      */
     public function iClickOnInTheHeadersOfTable($arg1)
