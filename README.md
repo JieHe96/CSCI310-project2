@@ -16,7 +16,7 @@ Black-box Testing
 1.	Open terminal, change directory to: Desktop/project2
 2.	Run the command  
 ```
-java -jar -Dwebdriver.river=”/Downloads/chromedriver” selenium-server-standalone-3.2.0.jar
+java -jar -Dwebdriver.river="/Downloads/chromedriver" selenium-server-standalone-3.2.0.jar
 ```
 3.	Open another terminal, change directory to: Desktop/project2
 4.	Run command line  
