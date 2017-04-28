@@ -66,17 +66,23 @@ class APIcommunicator{
 			$paper->setTitle($xmlobject[$i]["title"][0]);
 			for($j=0; $j<sizeof($xmlobject[$i]["author"]);$j++){
 				$wholename = $xmlobject[$i]["author"][$j];
-				$paper->setAuthors($wholename["given"]." ".$wholename["family"]);
+				if(array_key_exists("given",$wholename)&&array_key_exists("family",$wholename)){
+					$paper->setAuthors($wholename["given"]." ".$wholename["family"]);
+				}else if(!array_key_exists("given",$wholename)&&array_key_exists("family",$wholename)){
+					$paper->setAuthors($wholename["family"]);
+				}else if(array_key_exists("given",$wholename)&&!array_key_exists("family",$wholename)){
+					$paper->setAuthors($wholename["given"]);
+				}
 			}
 			if(array_key_exists ("DOI",$xmlobject[$i])){
 				
 				$paper->setDOI($xmlobject[$i]["DOI"]);
 				$searchURL = "http://dx.doi.org/".$paper->getDOI();
 				/* rotating proxy, need to delete*/
-				$auth = base64_encode('sidneychen:123321');
+				$auth = base64_encode('chen475@usc.edu:123321');
 				$aContext = array(
     				'http' => array(
-        				'proxy' => 'fr.proxymesh.com:31280',
+        				'proxy' => 'us-wa.proxymesh.com:31280',
        					'request_fulluri' => true,
        					'header' => "Proxy-Authorization: Basic $auth",
    					),
@@ -111,10 +117,10 @@ class APIcommunicator{
 		$searchURL .= "&type=Article&usebody=tabbody&";
 		$searchURL .= "cfid=".$paper->cfid;
 		$searchURL .= "&cftoken=".$paper->cftoken;
-		$auth = base64_encode('sidneychen:123321');
+		$auth = base64_encode('chen475@usc.edu:123321');
 		$aContext = array(
     		'http' => array(
-       			'proxy' => 'fr.proxymesh.com:31280',
+       			'proxy' => 'us-wa.proxymesh.com:31280',
 				'request_fulluri' => true,
        			'header' => "Proxy-Authorization: Basic $auth",
    			),
