@@ -5,7 +5,7 @@ include_once('paper.php');
 class APIcommunicator{
 	public $papers;
 	public $acmurl;
-
+	public $parseabstract = true;
 	function __construct(){
 		$this->papers = [];
 		$this->acmurl = "http://dl.acm.org/";
@@ -78,19 +78,22 @@ class APIcommunicator{
 				
 				$paper->setDOI($xmlobject[$i]["DOI"]);
 				$searchURL = "http://dx.doi.org/".$paper->getDOI();
-				/* rotating proxy, need to delete*/
-				$auth = base64_encode('chen475@usc.edu:123321');
-				$aContext = array(
-    				'http' => array(
-        				'proxy' => 'us-wa.proxymesh.com:31280',
-       					'request_fulluri' => true,
-       					'header' => "Proxy-Authorization: Basic $auth",
-   					),
-				);
-				$cxContext = stream_context_create($aContext);
-				$html = file_get_contents($searchURL,False, $cxContext);
-				/**/
-				//$html = file_get_contents($searchURL);
+				if($this->parseabstract){
+					/* rotating proxy, need to delete*/
+					$auth = base64_encode('chen475@usc.edu:123321');
+					$aContext = array(
+	    				'http' => array(
+	        				'proxy' => 'us-wa.proxymesh.com:31280',
+	       					'request_fulluri' => true,
+	       					'header' => "Proxy-Authorization: Basic $auth",
+	   					),
+					);
+					$cxContext = stream_context_create($aContext);
+					$html = file_get_contents($searchURL,False, $cxContext);
+					}
+				else{
+					$html = file_get_contents($searchURL);
+				} 
 				libxml_use_internal_errors(true);
 				$dom = new DOMDocument();
 				$dom->loadHTML($html);

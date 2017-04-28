@@ -63,6 +63,7 @@
 <script src="d3.layout.cloud.js"></script>
 
 <script>
+	var parseabstract = true;
 	var papers = [];
 	var PDF_URL = '';
 	var plainText_list;
@@ -178,25 +179,43 @@
   		delete link;
 	}
 	function displayWordCloud(){
-
 		frequency_list = [];
-		textnum = papers.length;
+		if(parseabstract){
+			textnum = papers.length;
+		}else{
+			textnum = 0;
+		}
 		processednum = 0;
 		for(var i=0; i<papers.length; i++){
-			/*
-			downloadURL(papers[i].downloadlink);
+
+			
+			if(parseabstract){
+				parseText(papers[i].abstract,papers[i].title);
+			}
+			else{
+				if(papers[i].downloadlink.includes("pdf")){							
+					downloadURL(papers[i]);
+				}
+			}
+		}
+
+		if(!parseabstract){setTimeout(function(){converttexts();},10000);}
+
+		document.querySelector("#wordcloudDiv").style.display = "block";
+		
+	}
+	function converttexts(){
+		for(var i=0; i<papers.length; i++){
 			if(papers[i].downloadlink.includes("pdf")){
-				convertToText("file:///Users/Sidney/Downloads/175783.pdf", papers[i].title);
-				// convertToText("https://cors-anywhere.herokuapp.com/"+papers[i].downloadlink, papers[i].title);
+				var templink = papers[i].downloadlink;
+				var tempname = templink.substring(templink.lastIndexOf("/")+1,templink.lastIndexOf(".pdf"));
+				convertToText("downloads/"+tempname+".pdf", papers[i].title);
 				textnum++;
 			}
-			*/
-			parseText(papers[i].abstract,papers[i].title);
 		}
-		document.querySelector("#wordcloudDiv").style.display = "block";
 	}
 
-	function displayAbstract(tablecell,selectedword){ 
+	function displayAbstract(tablecell,selectedword){
 		var clicktitle = tablecell.innerHTML;
 		for(var i=0; i<papers.length; i++){
 			if(papers[i].title == clicktitle){
@@ -222,9 +241,11 @@
 
 	function parseText(text_list, title) {
 		var text_str = '';
-		/*/
-		for(var i = 0; i < text_list.length; i++) {
-			text_str = text_str.concat(text_list[i]);
+		/**/
+		if(!parseabstract){
+			for(var i = 0; i < text_list.length; i++) {
+				text_str = text_str.concat(text_list[i]);
+			}
 		}
 		/**/
 		text_str = text_str.concat(text_list);
@@ -293,8 +314,10 @@
 		processednum++;
 		moveprogress();
 		if(textnum==processednum){
-			showCloud();
-			document.querySelector("#progressContainer").style.display = "none";
+			setTimeout(function(){
+				showCloud();
+				document.querySelector("#progressContainer").style.display = "none";
+			},1000);
 		}
 
 	}
