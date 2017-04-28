@@ -74,6 +74,11 @@ class APIcommunicator{
 					$paper->setAuthors($wholename["given"]);
 				}
 			}
+			if(array_key_exists ("event",$xmlobject[$i])){
+				$paper->setConference($xmlobject[$i]["event"]["name"]);
+			}else{
+				$paper->setConference("NULL");
+			}
 			if(array_key_exists ("DOI",$xmlobject[$i])){
 				
 				$paper->setDOI($xmlobject[$i]["DOI"]);
