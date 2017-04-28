@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="Alltest" file="/home/student/Desktop/CSCI310-project2/phptest/whitetests.php" tests="5" assertions="7" errors="0" failures="0" skipped="0" time="16.389724">
+    <testcase name="testPaperConstructor" class="Alltest" file="/home/student/Desktop/CSCI310-project2/phptest/whitetests.php" line="11" assertions="1" time="0.000840"/>
+    <testcase name="testPaperSet" class="Alltest" file="/home/student/Desktop/CSCI310-project2/phptest/whitetests.php" line="26" assertions="3" time="0.000797"/>
+    <testcase name="testAPIcommunicatorConstructor" class="Alltest" file="/home/student/Desktop/CSCI310-project2/phptest/whitetests.php" line="44" assertions="1" time="0.000746"/>
+    <testcase name="testAPIcommunicatorSearch" class="Alltest" file="/home/student/Desktop/CSCI310-project2/phptest/whitetests.php" line="58" assertions="1" time="13.831081"/>
+    <testcase name="testAPIcommunicatorSearchInvalid" class="Alltest" file="/home/student/Desktop/CSCI310-project2/phptest/whitetests.php" line="69" assertions="1" time="2.556260"/>
+  </testsuite>
+</testsuites>

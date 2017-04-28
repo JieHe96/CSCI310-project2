@@ -1,0 +1,7 @@
+Alltest
+ [x] Paper constructor
+ [x] Paper set
+ [x] A p icommunicator constructor
+ [x] A p icommunicator search
+ [x] A p icommunicator search invalid
+

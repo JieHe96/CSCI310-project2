@@ -1,0 +1,72 @@
+@sprint3
+Feature: (Req ID: 3) Access previously entered searches
+
+  Scenario: User can search by clicking on previously searched terms           # features/sprint3/AccessPrevious.feature:3
+    Given I am on "/WordCloud.html"                                            # FeatureContext::visit()
+    When I fill in "search_input" with "steven"                                # FeatureContext::fillField()
+    And I press "searchbutton"                                                 # FeatureContext::pressButton()
+    Then I fill in "search_input" with "wang"                                  # FeatureContext::fillField()
+    And I press "searchbutton"                                                 # FeatureContext::pressButton()
+    Then I can move the mouse over ".dropdown-content" element to see "steven" # FeatureContext::iCanMoveTheMouseOverElementToSee()
+
+@sprint3
+Feature: (Req ID: 7b) For each paper, clicking on a paper’s title
+  will allow the user access for downloading a PDF version of
+  the paper with the word highlighted in the PDF
+
+  Scenario: User can download the abstract as a pdf                            # features/sprint3/DownloadAbstract.feature:5
+    Given I am on "/WordCloud.html"                                            # FeatureContext::visit()
+    When I fill in "search_input" with "steven"                                # FeatureContext::fillField()
+    And I press "searchbutton"                                                 # FeatureContext::pressButton()
+    And I wait for 25 seconds                                                  # FeatureContext::iWaitForSeconds()
+    Then I click on "crowd"                                                    # FeatureContext::iClickOn()
+      Cannot find text: "crowd"
+    And I click on "Improving Crowd Innovation with Expert Facilitation"       # FeatureContext::iClickOn()
+    And I press "export abstract"                                              # FeatureContext::pressButton()
+
+@sprint3
+Feature: (Req ID: 7a) For each paper, clicking on a paper’s title
+  	will allow the user to read the abstract with the
+  	word(s) highlighted
+
+  Scenario: User can see highlighted abstract                                  # features/sprint3/HighlightedAbstract.feature:5
+    Given I am on "/WordCloud.html"                                            # FeatureContext::visit()
+    When I fill in "search_input" with "steven"                                # FeatureContext::fillField()
+    And I press "searchbutton"                                                 # FeatureContext::pressButton()
+    And I wait for 25 seconds                                                  # FeatureContext::iWaitForSeconds()
+    Then I click on "crowd"                                                    # FeatureContext::iClickOn()
+      Cannot find text: "crowd"
+    And I click on "Improving Crowd Innovation with Expert Facilitation"       # FeatureContext::iClickOn()
+    And I should word "crowd" highlighted in the abstract                      # FeatureContext::iShouldWordHighlightedInTheAbstract()
+
+@sprint3
+Feature: (Req ID: 8) Show a status bar for current
+  progress in generating the word cloud
+
+  Scenario: User can see a status bar after searching                          # features/sprint3/ShowStatusBar.feature:5
+    Given I am on "/WordCloud.html"                                            # FeatureContext::visit()
+    And I fill in "search_input" with "steven"                                 # FeatureContext::fillField()
+    And I press "searchbutton"                                                 # FeatureContext::pressButton()
+    And I wait for 5 seconds                                                   # FeatureContext::iWaitForSeconds()
+    Then I should see a status bar                                             # FeatureContext::iShouldSeeAStatusBar()
+      it is invisible
+
+@sprint3
+Feature: (Req ID: 9) For the paper list, allow users to
+  select a subset to generate a new word cloud from
+
+  Scenario: User can select subset to do new search                            # features/sprint3/SubsetSearch.feature:5
+    Given I am on "/WordCloud.html"                                            # FeatureContext::visit()
+    When I fill in "search_input" with "steven"                                # FeatureContext::fillField()
+    And I press "searchbutton"                                                 # FeatureContext::pressButton()
+    And I wait for 30 seconds                                                  # FeatureContext::iWaitForSeconds()
+    Then I click on "this"                                                     # FeatureContext::iClickOn()
+      Cannot find text: "this"
+    And I check "Improving Crowd Innovation with Expert Facilitation"          # FeatureContext::checkOption()
+    And I press "SubSearch"                                                    # FeatureContext::pressButton()
+    And I wait for 25 seconds                                                  # FeatureContext::iWaitForSeconds()
+    And I should see "crowd"                                                   # FeatureContext::assertPageContainsText()
+
+5 scenarios (1 passed, 4 failed)
+34 steps (22 passed, 8 skipped, 4 failed)
+1m34.652s
